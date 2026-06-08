@@ -5,204 +5,456 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Chess Study — jangelomedeiros</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=JetBrains+Mono:wght@300;400;500&family=Crimson+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@300;400;500&family=Crimson+Pro:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0b0d12;--s1:#13161e;--s2:#1b1f2a;--s3:#222737;--bd:#2b3149;--gold:#c9a84c;--gdim:#7a6028;--glow:#e8c068;--tx:#e0d8c8;--txd:#5e6685;--txm:#9ba0bc;--ql:#f0d9b5;--qd:#b58863;--lmf:rgba(170,210,115,.55);--lmt:rgba(170,210,115,.75);--green:#4a9e6e;--red:#9e4a4a;--fh:'Playfair Display',Georgia,serif;--fm:'JetBrains Mono',monospace;--fb:'Crimson Pro',Georgia,serif}
+:root{
+  --bg:#0b0d12;--s1:#13161e;--s2:#1b1f2a;--s3:#222737;
+  --bd:#2b3149;--gold:#c9a84c;--gdim:#7a6028;--glow:#e8c068;
+  --tx:#e0d8c8;--txd:#5e6685;--txm:#9ba0bc;
+  --ql:#f0d9b5;--qd:#b58863;
+  --lmf:rgba(160,210,70,.7);--lmt:#c8d640;
+  --green:#4a9e6e;--red:#9e4a4a;
+  --fh:'Playfair Display',Georgia,serif;
+  --fm:'JetBrains Mono',monospace;
+  --fb:'Crimson Pro',Georgia,serif;
+}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-family:var(--fb)}
-header{background:var(--s1);border-bottom:1px solid var(--bd);padding:0 20px;display:flex;align-items:center;gap:16px;height:56px;flex-shrink:0}
-.logo{font-family:var(--fh);font-size:18px;font-weight:700;color:var(--gold);letter-spacing:.04em;line-height:1}
-.logo small{display:block;font-family:var(--fm);font-size:9px;font-weight:300;color:var(--txd);letter-spacing:.18em;margin-top:2px}
-.hd-r{margin-left:auto;font-family:var(--fm);font-size:10px;color:var(--txd)}
-.layout{display:flex;height:calc(100vh - 56px);overflow:hidden}
-.bp{width:520px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;padding:12px 16px;gap:8px;border-right:1px solid var(--bd);overflow:hidden}
-.pr{width:480px;display:flex;align-items:center;justify-content:space-between}
-.pi{display:flex;align-items:center;gap:9px}
-.pic{font-size:22px}.pn{font-family:var(--fh);font-size:14px;line-height:1.1}.ps{font-family:var(--fm);font-size:9px;color:var(--txd);letter-spacing:.1em}
-.rbdg{font-family:var(--fm);font-size:12px;color:var(--gold);background:var(--s2);border:1px solid var(--bd);border-radius:3px;padding:3px 9px}
-.etag{font-family:var(--fm);font-size:9px;color:var(--txd);text-align:right;max-width:200px;line-height:1.3}
-#board{display:grid;grid-template-columns:repeat(8,60px);grid-template-rows:repeat(8,60px);width:480px;height:480px;border:2px solid var(--bd);box-shadow:0 16px 48px rgba(0,0,0,.65),0 0 0 1px rgba(201,168,76,.12);flex-shrink:0}
+
+/* ── HEADER ── */
+header{
+  background:var(--s1);border-bottom:1px solid var(--bd);
+  padding:0 24px;display:flex;align-items:center;gap:20px;height:52px;flex-shrink:0;
+}
+.logo{font-family:var(--fh);font-size:17px;font-weight:700;color:var(--gold);letter-spacing:.04em;line-height:1}
+.logo small{display:block;font-family:var(--fm);font-size:8px;font-weight:300;color:var(--txd);letter-spacing:.2em;margin-top:3px}
+.hdr{margin-left:auto;font-family:var(--fm);font-size:10px;color:var(--txd)}
+
+/* ── LAYOUT ── */
+.layout{display:flex;height:calc(100vh - 52px);overflow:hidden}
+
+/* ── PAINEL ESQUERDO (tabuleiro) ── */
+.bp{
+  width:620px;flex-shrink:0;
+  display:flex;flex-direction:column;align-items:center;
+  padding:14px 18px 12px;gap:10px;
+  border-right:1px solid var(--bd);overflow:hidden;
+}
+
+/* Linha de jogador */
+.pr{width:560px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.pi{display:flex;align-items:center;gap:10px}
+.pic{font-size:26px;line-height:1}
+.pn{font-family:var(--fh);font-size:15px;font-weight:700;letter-spacing:.01em}
+.ps{font-family:var(--fm);font-size:8px;color:var(--txd);letter-spacing:.12em;margin-top:1px}
+.pr-right{display:flex;align-items:center;gap:8px}
+.rbdg{font-family:var(--fm);font-size:11px;color:var(--gold);background:var(--s2);border:1px solid var(--gdim);border-radius:3px;padding:3px 10px;letter-spacing:.05em}
+.etag{font-family:var(--fm);font-size:9px;color:var(--txd);text-align:right;line-height:1.4;max-width:200px}
+
+/* ── TABULEIRO ── */
+#board{
+  display:grid;
+  grid-template-columns:repeat(8,70px);
+  grid-template-rows:repeat(8,70px);
+  width:560px;height:560px;
+  border:2px solid #1a1e28;
+  box-shadow:0 8px 40px rgba(0,0,0,.7), 0 0 0 1px rgba(201,168,76,.15), inset 0 0 0 1px rgba(255,255,255,.03);
+  flex-shrink:0;
+}
 .sq{display:flex;align-items:center;justify-content:center;position:relative;user-select:none}
 .sq.lt{background:var(--ql)}.sq.dk{background:var(--qd)}
-.sq.lmf{box-shadow:inset 0 0 0 60px var(--lmf)}.sq.lmt{box-shadow:inset 0 0 0 60px var(--lmt)}
-.cr{position:absolute;font-size:9px;font-family:var(--fm);font-weight:500;opacity:.65}
-.cr-r{top:2px;left:3px}.cr-f{bottom:2px;right:3px}
+.sq.lmf{outline:4px solid rgba(140,200,60,.9);outline-offset:-4px;z-index:1}
+.sq.lmt{background:#b8d020!important}
+.cr{position:absolute;font-size:9px;font-family:var(--fm);font-weight:600;opacity:.7;line-height:1}
+.cr-r{top:3px;left:4px}.cr-f{bottom:3px;right:4px}
 .sq.lt .cr{color:var(--qd)}.sq.dk .cr{color:var(--ql)}
-.pc{font-size:44px;line-height:1;pointer-events:none}
-.pw{color:#fffce8;filter:drop-shadow(0 0 1.5px rgba(0,0,0,.9)) drop-shadow(0 1px 3px rgba(0,0,0,.6))}
-.pb{color:#130e04;filter:drop-shadow(0 0 1px rgba(255,255,255,.15)) drop-shadow(0 1px 2px rgba(0,0,0,.4))}
-.ctrl{display:flex;align-items:center;gap:5px;width:480px;flex-wrap:wrap;justify-content:center}
-.cb{background:var(--s2);border:1px solid var(--bd);border-radius:3px;color:var(--tx);cursor:pointer;font-family:var(--fm);font-size:13px;padding:6px 10px;transition:all .12s;line-height:1}
-.cb:hover{border-color:var(--gdim);color:var(--gold)}
-.cb.sv{border-color:rgba(74,158,110,.4);color:var(--green)}.cb.sv:hover{border-color:var(--green);background:rgba(74,158,110,.1)}
-.mctr{font-family:var(--fm);font-size:11px;color:var(--txd);min-width:56px;text-align:center}
-.sw{display:flex;align-items:center;gap:4px}.sw label{font-size:9px;color:var(--txd);font-family:var(--fm)}
-input[type=range]{width:50px;accent-color:var(--gold)}
-.aw{width:480px;background:var(--s1);border:1px solid var(--bd);border-radius:3px;overflow:hidden;flex-shrink:0}
-.ahd{display:flex;justify-content:space-between;align-items:center;padding:5px 12px;border-bottom:1px solid var(--bd);background:var(--s2)}
-.alb{font-family:var(--fm);font-size:9px;letter-spacing:.14em;color:var(--txd)}.alb.cur{color:#82c0a0}.alb.eng{color:var(--gold)}
-.amv{font-family:var(--fm);font-size:9px;color:var(--txm)}
-.evr{display:none;align-items:center;gap:8px;padding:6px 12px;border-bottom:1px solid var(--bd)}
-.evr.on{display:flex}
-.evbg{flex:1;height:6px;background:var(--s3);border-radius:4px;overflow:hidden;position:relative}
-.evbk{position:absolute;left:0;top:0;height:100%;background:linear-gradient(to left,#2a2d3a,#1a1d28);border-radius:4px;transition:width .5s}
-.evwh{position:absolute;right:0;top:0;height:100%;background:linear-gradient(to right,#c9a84c,#f0d060);border-radius:4px;transition:width .5s}
-.evsc{font-family:var(--fm);font-size:11px;font-weight:500;min-width:38px;text-align:right}.evsc.pos{color:var(--gold)}.evsc.neg{color:var(--txm)}.evsc.eq{color:var(--txd)}
-.evdp{font-family:var(--fm);font-size:9px;color:var(--txd)}
-.evbl{padding:4px 12px;font-family:var(--fm);font-size:10px;color:var(--txd);border-bottom:1px solid var(--bd);display:none}
-.evbl.on{display:block}
-.ab{padding:10px 13px;font-size:13px;line-height:1.58;min-height:60px;color:var(--txm)}
-.ab.it{font-style:italic;color:var(--tx)}.ab.mt{color:var(--txd);font-style:normal;font-family:var(--fm);font-size:10px;min-height:36px}
+.pc{font-size:52px;line-height:1;pointer-events:none;transition:opacity .1s}
+.pw{color:#fffce8;filter:drop-shadow(0 0 2px rgba(0,0,0,.95)) drop-shadow(0 1px 4px rgba(0,0,0,.7))}
+.pb{color:#0e0a04;filter:drop-shadow(0 0 1px rgba(255,255,255,.25)) drop-shadow(0 2px 3px rgba(0,0,0,.5))}
+
+/* ── CONTROLES ── */
+.ctrl{
+  display:flex;align-items:center;gap:6px;width:560px;
+  background:var(--s1);border:1px solid var(--bd);border-radius:6px;
+  padding:8px 12px;
+}
+.cb{
+  background:transparent;border:1px solid transparent;border-radius:4px;
+  color:var(--txm);cursor:pointer;font-family:var(--fm);font-size:14px;
+  padding:5px 9px;transition:all .12s;line-height:1;
+}
+.cb:hover{border-color:var(--bd);color:var(--gold);background:var(--s2)}
+.cb.sv{
+  margin-left:auto;
+  border-color:rgba(74,158,110,.4);color:var(--green);background:rgba(74,158,110,.07);
+  font-size:11px;padding:5px 12px;
+}
+.cb.sv:hover{border-color:var(--green);background:rgba(74,158,110,.15)}
+.mctr{font-family:var(--fm);font-size:11px;color:var(--txd);min-width:62px;text-align:center}
+.sep{width:1px;height:20px;background:var(--bd);flex-shrink:0}
+.sw{display:flex;align-items:center;gap:5px}
+.sw label{font-size:9px;color:var(--txd);font-family:var(--fm)}
+input[type=range]{width:52px;accent-color:var(--gold)}
+
+/* ── PAINEL DIREITO ── */
 .rp{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+
+/* ── ANÁLISE (sempre visível, topo direito) ── */
+.af{
+  flex-shrink:0;
+  background:var(--s1);
+  border-bottom:2px solid var(--bd);
+}
+.af-hd{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 16px 9px;
+  border-bottom:1px solid var(--bd);
+  background:var(--s2);
+}
+.af-lbl{
+  font-family:var(--fm);font-size:9px;letter-spacing:.15em;
+  color:var(--txd);display:flex;align-items:center;gap:6px;
+}
+.af-lbl-dot{width:6px;height:6px;border-radius:50%;background:var(--txd);flex-shrink:0}
+.af-lbl.cur .af-lbl-dot{background:#82c0a0}
+.af-lbl.cur{color:#82c0a0}
+.af-lbl.eng .af-lbl-dot{background:var(--gold)}
+.af-lbl.eng{color:var(--gold)}
+.af-mv{font-family:var(--fm);font-size:10px;color:var(--txm);font-weight:500}
+
+/* Barra de avaliação */
+.evrow{display:none;align-items:center;gap:12px;padding:10px 16px 8px;border-bottom:1px solid var(--bd)}
+.evrow.on{display:flex}
+.ev-labels{display:flex;flex-direction:column;gap:4px;flex:1}
+.ev-bar-wrap{display:flex;align-items:center;gap:8px}
+.ev-pc{font-family:var(--fm);font-size:9px;color:var(--txd);width:14px}
+.ev-bg{
+  flex:1;height:8px;background:var(--s3);border-radius:4px;overflow:hidden;position:relative;
+  border:1px solid rgba(255,255,255,.05);
+}
+.ev-bk{position:absolute;left:0;top:0;height:100%;background:linear-gradient(to left,#1a1d26,#0d0f14);transition:width .5s ease}
+.ev-wh{position:absolute;right:0;top:0;height:100%;background:linear-gradient(to right,#c9a84c,#eecc70);transition:width .5s ease}
+.ev-info{display:flex;justify-content:space-between;align-items:center;margin-top:3px}
+.ev-sc{font-family:var(--fm);font-size:12px;font-weight:500}
+.ev-sc.pos{color:var(--gold)}.ev-sc.neg{color:var(--txm)}.ev-sc.eq{color:var(--txd)}
+.ev-dp{font-family:var(--fm);font-size:9px;color:var(--txd)}
+.ev-bl{
+  padding:6px 16px;font-family:var(--fm);font-size:10px;color:var(--txd);
+  border-bottom:1px solid var(--bd);display:none;
+  background:rgba(0,0,0,.15);
+}
+.ev-bl.on{display:block}
+.ev-bl strong{color:var(--txm)}
+
+/* Texto da análise */
+.af-body{
+  padding:14px 16px 16px;
+  font-family:var(--fb);font-size:14px;line-height:1.65;
+  color:var(--txm);
+  min-height:88px;
+  max-height:160px;
+  overflow-y:auto;
+  scrollbar-width:thin;scrollbar-color:var(--bd) transparent;
+}
+.af-body.it{font-style:italic;color:var(--tx)}
+.af-body.mt{font-family:var(--fm);font-size:10px;color:var(--txd);font-style:normal}
+
+/* ── TABS AREA ── */
+.tabs-area{flex:1;display:flex;flex-direction:column;overflow:hidden}
 .tabs{display:flex;background:var(--s1);border-bottom:1px solid var(--bd);flex-shrink:0}
-.tab{padding:10px 14px;font-family:var(--fm);font-size:10px;letter-spacing:.1em;color:var(--txd);cursor:pointer;border-bottom:2px solid transparent;transition:all .12s;white-space:nowrap}
+.tab{
+  padding:10px 16px;font-family:var(--fm);font-size:9px;letter-spacing:.12em;
+  color:var(--txd);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;
+  transition:color .12s;
+}
 .tab:hover{color:var(--tx)}.tab.on{color:var(--gold);border-bottom-color:var(--gold)}
 .pane{flex:1;overflow-y:auto;padding:14px;scrollbar-width:thin;scrollbar-color:var(--bd) transparent;display:none}
 .pane.on{display:block}
-.shd{font-family:var(--fm);font-size:9px;letter-spacing:.18em;color:var(--txd);text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between}
-.shd button{background:none;border:1px solid var(--bd);border-radius:2px;color:var(--txd);cursor:pointer;font-family:var(--fm);font-size:8px;padding:2px 7px}
+
+/* ── SEÇÃO HEADER ── */
+.shd{
+  font-family:var(--fm);font-size:8px;letter-spacing:.2em;color:var(--txd);
+  text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;
+  border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;
+}
+.shd button{
+  background:none;border:1px solid var(--bd);border-radius:2px;color:var(--txd);
+  cursor:pointer;font-family:var(--fm);font-size:8px;padding:2px 7px;
+}
 .shd button:hover{border-color:var(--gdim);color:var(--gold)}
-.gc{background:var(--s1);border:1px solid var(--bd);border-radius:3px;padding:12px;margin-bottom:7px;cursor:pointer;transition:all .12s;position:relative}
+
+/* ── CARDS BIBLIOTECA ── */
+.gc{
+  background:var(--s1);border:1px solid var(--bd);border-radius:4px;
+  padding:12px 14px;margin-bottom:8px;cursor:pointer;
+  transition:border-color .12s,background .12s;position:relative;
+}
 .gc:hover{border-color:var(--gdim);background:var(--s2)}.gc.on{border-color:var(--gold)}
-.gt{font-family:var(--fh);font-size:14px;margin-bottom:3px;padding-right:22px}
-.gs{font-family:var(--fm);font-size:10px;color:var(--txd);margin-bottom:6px}
-.gd{font-size:12px;color:var(--txm);line-height:1.4}
-.bdg{display:inline-block;background:var(--s2);border:1px solid var(--bd);border-radius:2px;padding:1px 6px;font-size:9px;font-family:var(--fm);color:var(--txd);margin-top:4px;margin-right:2px}
+.gt{font-family:var(--fh);font-size:14px;margin-bottom:3px;padding-right:22px;color:var(--tx)}
+.gs{font-family:var(--fm);font-size:9px;color:var(--txd);margin-bottom:6px}
+.gd{font-size:12px;color:var(--txm);line-height:1.5}
+.bdg{
+  display:inline-block;background:var(--s2);border:1px solid var(--bd);
+  border-radius:2px;padding:1px 7px;font-size:9px;font-family:var(--fm);
+  color:var(--txd);margin-top:5px;margin-right:3px;
+}
 .bdg.u{border-color:rgba(74,158,110,.3);color:var(--green)}
-.del{position:absolute;top:10px;right:10px;background:none;border:1px solid var(--bd);border-radius:2px;color:var(--txd);cursor:pointer;font-size:12px;padding:1px 6px;transition:all .12s}
-.del:hover{border-color:var(--red);color:var(--red);background:rgba(158,74,74,.1)}
-.elib{color:var(--txd);font-size:10px;font-family:var(--fm);padding:14px;border:1px dashed var(--bd);border-radius:3px;text-align:center;line-height:1.8}
-.sf label{display:block;font-family:var(--fm);font-size:9px;letter-spacing:.12em;color:var(--txd);margin:10px 0 4px}
+.del{
+  position:absolute;top:10px;right:10px;background:none;border:1px solid var(--bd);
+  border-radius:2px;color:var(--txd);cursor:pointer;font-size:12px;padding:1px 7px;
+  transition:all .12s;
+}
+.del:hover{border-color:var(--red);color:var(--red);background:rgba(158,74,74,.08)}
+.elib{
+  color:var(--txd);font-size:10px;font-family:var(--fm);
+  padding:20px 14px;border:1px dashed var(--bd);border-radius:4px;
+  text-align:center;line-height:1.9;
+}
+
+/* ── FORMULÁRIO LICHESS ── */
+.sf label{
+  display:block;font-family:var(--fm);font-size:8px;letter-spacing:.12em;
+  color:var(--txd);margin:12px 0 4px;
+}
 .sf label:first-child{margin-top:0}
-.sf input,.sf textarea{width:100%;background:var(--s2);border:1px solid var(--bd);border-radius:3px;color:var(--tx);font-family:var(--fm);font-size:11px;padding:7px 10px;outline:none}
+.sf input,.sf textarea{
+  width:100%;background:var(--s2);border:1px solid var(--bd);border-radius:3px;
+  color:var(--tx);font-family:var(--fm);font-size:11px;padding:7px 10px;outline:none;
+  transition:border-color .15s;
+}
 .sf input:focus,.sf textarea:focus{border-color:var(--gdim)}
 .sf input::placeholder,.sf textarea::placeholder{color:var(--txd)}
-.sf textarea{min-height:65px;resize:vertical;font-size:10px}
-.gbtn{width:100%;margin-top:4px;background:var(--gold);border:1px solid var(--gold);border-radius:3px;color:#0b0d12;font-family:var(--fm);font-size:11px;font-weight:500;padding:7px;cursor:pointer}
+.sf textarea{min-height:70px;resize:vertical;font-size:10px}
+.gbtn{
+  width:100%;margin-top:5px;background:var(--gold);border:1px solid var(--gold);
+  border-radius:3px;color:#0b0d12;font-family:var(--fm);font-size:11px;font-weight:500;
+  padding:8px;cursor:pointer;transition:background .12s;
+}
 .gbtn:hover{background:var(--glow)}
-.msg{border-radius:3px;padding:7px 10px;font-family:var(--fm);font-size:10px;margin-top:6px}
+.msg{border-radius:3px;padding:8px 12px;font-family:var(--fm);font-size:10px;margin-top:8px}
 .msg.err{background:rgba(180,50,50,.1);border:1px solid rgba(180,50,50,.3);color:#e07070}
 .msg.ok{background:rgba(50,150,80,.1);border:1px solid rgba(50,150,80,.3);color:#70c090}
 .ld{text-align:center;padding:16px;font-family:var(--fm);font-size:10px;color:var(--txd)}
 .da::after{content:'';animation:da 1.2s infinite}
 @keyframes da{0%{content:''}33%{content:'.'}66%{content:'..'}100%{content:'...'}}
-.ml{font-family:var(--fm);font-size:12px}
-.mr{display:grid;grid-template-columns:24px 1fr 1fr;gap:3px;align-items:center;padding:2px 3px;border-radius:2px}
+
+/* ── LISTA DE LANCES ── */
+.ml{font-family:var(--fm);font-size:11px;column-count:1}
+.mr{
+  display:grid;grid-template-columns:28px 1fr 1fr;gap:2px;
+  align-items:center;padding:3px 4px;border-radius:3px;
+}
 .mr:hover{background:var(--s2)}
-.mn{color:var(--txd);font-size:10px}
-.mb{padding:3px 6px;border-radius:2px;cursor:pointer;color:var(--txm);transition:all .1s}
+.mn{color:var(--txd);font-size:9px;text-align:right;padding-right:4px}
+.mb{
+  padding:3px 8px;border-radius:2px;cursor:pointer;
+  color:var(--txm);transition:all .1s;font-size:11px;
+}
 .mb:hover{background:var(--s1);color:var(--gold)}
 .mb.on{background:var(--gold);color:#0b0d12;font-weight:500}
-.mb.ha::after{content:'·';color:#82c0a0;margin-left:2px;font-size:10px}
-.mbg{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:100;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.mb.ha::after{content:'●';color:#82c0a0;margin-left:3px;font-size:7px;vertical-align:middle}
+
+/* ── MODAL SALVAR ── */
+.mbg{
+  position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:100;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .2s;
+}
 .mbg.on{opacity:1;pointer-events:all}
-.md{background:var(--s1);border:1px solid var(--bd);border-radius:4px;padding:24px;width:400px;box-shadow:0 24px 64px rgba(0,0,0,.8)}
-.mdt{font-family:var(--fh);font-size:16px;margin-bottom:16px;color:var(--gold)}
-.md label{display:block;font-family:var(--fm);font-size:9px;letter-spacing:.12em;color:var(--txd);margin:12px 0 4px}
+.md{
+  background:var(--s1);border:1px solid var(--bd);border-radius:6px;
+  padding:28px;width:420px;
+  box-shadow:0 32px 80px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.04);
+}
+.mdt{font-family:var(--fh);font-size:17px;margin-bottom:20px;color:var(--gold)}
+.md label{
+  display:block;font-family:var(--fm);font-size:8px;letter-spacing:.12em;
+  color:var(--txd);margin:14px 0 5px;
+}
 .md label:first-of-type{margin-top:0}
-.md input,.md textarea{width:100%;background:var(--s2);border:1px solid var(--bd);border-radius:3px;color:var(--tx);font-family:var(--fm);font-size:11px;padding:8px 10px;outline:none}
-.md textarea{min-height:56px;resize:vertical;font-size:10px}
+.md input,.md textarea{
+  width:100%;background:var(--s2);border:1px solid var(--bd);border-radius:3px;
+  color:var(--tx);font-family:var(--fm);font-size:11px;padding:9px 11px;outline:none;
+  transition:border-color .15s;
+}
+.md input:focus,.md textarea:focus{border-color:var(--gdim)}
+.md textarea{min-height:64px;resize:vertical;font-size:10px}
 .mtags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-.mtg{background:var(--s2);border:1px solid var(--bd);border-radius:3px;padding:4px 8px;cursor:pointer;font-family:var(--fm);font-size:9px;color:var(--txd);transition:all .12s}
-.mtg:hover{border-color:var(--gdim)}.mtg.on{border-color:var(--gold);color:var(--gold)}
-.mbt{display:flex;gap:8px;margin-top:18px;justify-content:flex-end}
-.toast{position:fixed;bottom:18px;right:18px;background:var(--s2);border:1px solid var(--gdim);border-radius:3px;padding:10px 16px;font-family:var(--fm);font-size:11px;color:var(--gold);z-index:999;transform:translateY(50px);opacity:0;transition:all .25s;pointer-events:none}
-.toast.on{transform:translateY(0);opacity:1}.toast.err{border-color:rgba(180,50,50,.5);color:#e07070}
-#boot{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;z-index:200}
-.boot-logo{font-family:var(--fh);font-size:28px;color:var(--gold)}
-.boot-msg{font-family:var(--fm);font-size:11px;color:var(--txd)}
+.mtg{
+  background:var(--s2);border:1px solid var(--bd);border-radius:3px;
+  padding:4px 10px;cursor:pointer;font-family:var(--fm);font-size:9px;
+  color:var(--txd);transition:all .12s;
+}
+.mtg:hover{border-color:var(--gdim)}.mtg.on{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.08)}
+.mbt{display:flex;gap:8px;margin-top:20px;justify-content:flex-end}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:20px;right:20px;background:var(--s2);
+  border:1px solid var(--gdim);border-radius:4px;
+  padding:11px 18px;font-family:var(--fm);font-size:11px;color:var(--gold);
+  z-index:999;transform:translateY(60px);opacity:0;transition:all .25s;pointer-events:none;
+}
+.toast.on{transform:translateY(0);opacity:1}
+.toast.err{border-color:rgba(180,50,50,.5);color:#e07070}
+
+/* ── BOOT ── */
+#boot{
+  position:fixed;inset:0;background:var(--bg);z-index:200;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:18px;
+}
+.bl{font-family:var(--fh);font-size:30px;color:var(--gold)}
+.bm{font-family:var(--fm);font-size:11px;color:var(--txd)}
+.bm::after{content:'';animation:da 1.2s infinite}
 </style>
 </head>
 <body>
 
 <div id="boot">
-  <div class="boot-logo">♟ Chess Study</div>
-  <div class="boot-msg" id="bootmsg">Carregando motor de xadrez...</div>
+  <div class="bl">♟ Chess Study</div>
+  <div class="bm" id="bootmsg">Carregando motor de xadrez</div>
 </div>
 
 <header>
   <div class="logo">♟ Chess Study<small>ANÁLISE E ESTUDO DE PARTIDAS</small></div>
-  <div class="hd-r">← → navegar &nbsp;|&nbsp; Espaço = play &nbsp;|&nbsp; F = virar &nbsp;|&nbsp; S = salvar</div>
+  <div class="hdr">← → navegar &nbsp;&nbsp;|&nbsp;&nbsp; Espaço = play &nbsp;&nbsp;|&nbsp;&nbsp; F = virar &nbsp;&nbsp;|&nbsp;&nbsp; S = salvar</div>
 </header>
 
 <div class="layout">
+
+  <!-- ── PAINEL ESQUERDO: tabuleiro ── -->
   <div class="bp">
+
     <div class="pr">
-      <div class="pi"><span class="pic">♚</span><div><div class="pn" id="pBlack">—</div><div class="ps">NEGRAS</div></div></div>
-      <div id="resultBadge"></div>
-    </div>
-    <div id="board"></div>
-    <div class="pr">
-      <div class="pi"><span class="pic">♔</span><div><div class="pn" id="pWhite">—</div><div class="ps">BRANCAS</div></div></div>
-      <div class="etag" id="evTag"></div>
-    </div>
-    <div class="ctrl">
-      <button class="cb" onclick="goStart()">⏮</button>
-      <button class="cb" onclick="prev()">◀</button>
-      <button class="cb" id="playBtn" onclick="togglePlay()">▶</button>
-      <button class="cb" onclick="next()">▶</button>
-      <button class="cb" onclick="goEnd()">⏭</button>
-      <span class="mctr" id="moveCtr">— / —</span>
-      <div class="sw"><label>vel</label><input type="range" id="speedSlider" min="400" max="3000" value="1400" step="200"></div>
-      <button class="cb" onclick="flip()">⟳</button>
-      <button class="cb sv" onclick="openSaveModal()">💾 Salvar</button>
-    </div>
-    <div class="aw">
-      <div class="ahd">
-        <span class="alb" id="annLabel">—</span>
-        <span class="amv" id="annMove"></span>
+      <div class="pi">
+        <span class="pic">♚</span>
+        <div>
+          <div class="pn" id="pBlack">—</div>
+          <div class="ps">NEGRAS</div>
+        </div>
       </div>
-      <div class="evr" id="evalRow">
-        <div style="display:flex;flex-direction:column;gap:3px;flex:1">
-          <div style="display:flex;align-items:center;gap:5px">
-            <span style="font-family:var(--fm);font-size:8px;color:var(--txd);width:18px">♚</span>
-            <div class="evbg" style="flex:1;position:relative">
-              <div class="evbk" id="evbk" style="width:50%"></div>
-              <div class="evwh" id="evwh" style="width:50%"></div>
+      <div class="pr-right">
+        <div id="resultBadge"></div>
+        <div class="etag" id="evTag"></div>
+      </div>
+    </div>
+
+    <div id="board"></div>
+
+    <div class="pr">
+      <div class="pi">
+        <span class="pic">♔</span>
+        <div>
+          <div class="pn" id="pWhite">—</div>
+          <div class="ps">BRANCAS</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ctrl">
+      <button class="cb" onclick="goStart()" title="Início (↑)">⏮</button>
+      <button class="cb" onclick="prev()" title="Anterior (←)">◀</button>
+      <button class="cb" id="playBtn" onclick="togglePlay()" title="Play/Pause (Espaço)">▶</button>
+      <button class="cb" onclick="next()" title="Próximo (→)">▶</button>
+      <button class="cb" onclick="goEnd()" title="Final (↓)">⏭</button>
+      <div class="sep"></div>
+      <span class="mctr" id="moveCtr">— / —</span>
+      <div class="sep"></div>
+      <div class="sw">
+        <label>vel</label>
+        <input type="range" id="speedSlider" min="300" max="3000" value="1200" step="200">
+      </div>
+      <div class="sep"></div>
+      <button class="cb" onclick="flip()" title="Virar tabuleiro (F)">⟳</button>
+      <button class="cb sv" onclick="openSaveModal()" title="Salvar na biblioteca (S)">💾 Salvar</button>
+    </div>
+
+  </div>
+
+  <!-- ── PAINEL DIREITO ── -->
+  <div class="rp">
+
+    <!-- ANÁLISE: sempre visível, topo direito -->
+    <div class="af">
+      <div class="af-hd">
+        <div class="af-lbl" id="annLabel">
+          <span class="af-lbl-dot"></span>
+          <span id="annLabelText">—</span>
+        </div>
+        <div class="af-mv" id="annMove"></div>
+      </div>
+
+      <div class="evrow" id="evalRow">
+        <div class="ev-labels" style="flex:1">
+          <div class="ev-bar-wrap">
+            <span class="ev-pc">♚</span>
+            <div class="ev-bg">
+              <div class="ev-bk" id="evbk" style="width:50%"></div>
+              <div class="ev-wh" id="evwh" style="width:50%"></div>
             </div>
-            <span style="font-family:var(--fm);font-size:8px;color:var(--txd);width:18px;text-align:right">♔</span>
+            <span class="ev-pc" style="text-align:right">♔</span>
           </div>
-          <div style="display:flex;justify-content:space-between">
-            <span class="evdp" id="evDepth"></span>
-            <span class="evsc" id="evScore"></span>
+          <div class="ev-info">
+            <span class="ev-dp" id="evDepth"></span>
+            <span class="ev-sc" id="evScore"></span>
           </div>
         </div>
       </div>
-      <div class="evbl" id="evBestLine"></div>
-      <div class="ab mt" id="annBox">Selecione uma partida para começar.</div>
-    </div>
-  </div>
 
-  <div class="rp">
-    <div class="tabs">
-      <div class="tab on" id="tab-lib" onclick="switchTab('lib')">CLÁSSICAS</div>
-      <div class="tab" id="tab-user" onclick="switchTab('user')">MINHA BIBLIOTECA</div>
-      <div class="tab" id="tab-lich" onclick="switchTab('lich')">LICHESS</div>
-      <div class="tab" id="tab-mv" onclick="switchTab('mv')">LANCES</div>
-    </div>
-    <div class="pane on" id="pane-lib"><div class="shd">Partidas Clássicas da Literatura</div><div id="libList"></div></div>
-    <div class="pane" id="pane-user">
-      <div class="shd"><span>Minha Biblioteca (<span id="userCount">0</span>)</span><button onclick="exportLib()">⬇ Exportar PGN</button></div>
-      <div id="userList"></div>
-    </div>
-    <div class="pane" id="pane-lich">
-      <div class="sf">
-        <label>BUSCAR JOGADOR (Lichess)</label>
-        <input type="text" id="lichUser" placeholder="nome de usuário no lichess.org" onkeydown="if(event.key==='Enter')searchLich()">
-        <button class="gbtn" onclick="searchLich()">Buscar Partidas</button>
-        <label>IMPORTAR URL</label>
-        <input type="text" id="lichURL" placeholder="https://lichess.org/abcd1234" onkeydown="if(event.key==='Enter')importURL()">
-        <button class="gbtn" onclick="importURL()">Importar Partida</button>
-        <label>COLAR PGN</label>
-        <textarea id="pgnPaste" placeholder='[Event "..."]\n[White "..."]\n\n1. e4 e5 ...'></textarea>
-        <button class="gbtn" onclick="loadPGNDirect()">Carregar PGN</button>
+      <div class="ev-bl" id="evBestLine"></div>
+
+      <div class="af-body mt" id="annBox">
+        Selecione uma partida na aba <strong>Clássicas</strong> ou importe via <strong>Lichess</strong>.
       </div>
-      <div id="searchRes"></div>
     </div>
-    <div class="pane" id="pane-mv"><div class="shd">Lista de Lances — clique para navegar</div><div class="ml" id="mvList"></div></div>
+
+    <!-- TABS + CONTEÚDO -->
+    <div class="tabs-area">
+      <div class="tabs">
+        <div class="tab on" id="tab-lib" onclick="switchTab('lib')">CLÁSSICAS</div>
+        <div class="tab" id="tab-user" onclick="switchTab('user')">MINHA BIBLIOTECA</div>
+        <div class="tab" id="tab-lich" onclick="switchTab('lich')">LICHESS</div>
+        <div class="tab" id="tab-mv" onclick="switchTab('mv')">LANCES</div>
+      </div>
+
+      <div class="pane on" id="pane-lib">
+        <div class="shd">Partidas Clássicas da Literatura</div>
+        <div id="libList"></div>
+      </div>
+
+      <div class="pane" id="pane-user">
+        <div class="shd">
+          <span>Minha Biblioteca (<span id="userCount">0</span>)</span>
+          <button onclick="exportLib()">⬇ Exportar PGN</button>
+        </div>
+        <div id="userList"></div>
+      </div>
+
+      <div class="pane" id="pane-lich">
+        <div class="sf">
+          <label>BUSCAR JOGADOR (Lichess)</label>
+          <input type="text" id="lichUser" placeholder="nome de usuário no lichess.org" onkeydown="if(event.key==='Enter')searchLich()">
+          <button class="gbtn" onclick="searchLich()">Buscar Partidas</button>
+          <label>IMPORTAR URL</label>
+          <input type="text" id="lichURL" placeholder="https://lichess.org/abcd1234" onkeydown="if(event.key==='Enter')importURL()">
+          <button class="gbtn" onclick="importURL()">Importar Partida</button>
+          <label>COLAR PGN</label>
+          <textarea id="pgnPaste" placeholder="[Event &quot;...&quot;]&#10;[White &quot;...&quot;]&#10;[Result &quot;...&quot;]&#10;&#10;1. e4 e5 ..."></textarea>
+          <button class="gbtn" onclick="loadPGNDirect()">Carregar PGN</button>
+        </div>
+        <div id="searchRes"></div>
+      </div>
+
+      <div class="pane" id="pane-mv">
+        <div class="shd">Lista de Lances — clique para navegar</div>
+        <div class="ml" id="mvList"></div>
+      </div>
+
+    </div>
   </div>
 </div>
 
+<!-- MODAL SALVAR -->
 <div class="mbg" id="modalBg" onclick="if(event.target===this)closeModal()">
   <div class="md">
     <div class="mdt">💾 Salvar na Biblioteca</div>
@@ -211,7 +463,7 @@ input[type=range]{width:50px;accent-color:var(--gold)}
     <label>ANOTAÇÃO PESSOAL</label>
     <textarea id="saveNote" placeholder="Por que esta partida é relevante para seu estudo..."></textarea>
     <label>CATEGORIAS</label>
-    <div class="mtags" id="saveTags">
+    <div class="mtags">
       <div class="mtg" onclick="this.classList.toggle('on')" data-tag="abertura">Abertura</div>
       <div class="mtg" onclick="this.classList.toggle('on')" data-tag="meio-jogo">Meio-jogo</div>
       <div class="mtg" onclick="this.classList.toggle('on')" data-tag="final">Final</div>
@@ -222,7 +474,7 @@ input[type=range]{width:50px;accent-color:var(--gold)}
     </div>
     <div class="mbt">
       <button class="cb" onclick="closeModal()">Cancelar</button>
-      <button class="cb sv" onclick="confirmSave()" style="background:rgba(74,158,110,.15);border-color:var(--green);font-weight:500">✓ Salvar</button>
+      <button class="cb sv" onclick="confirmSave()" style="font-weight:500">✓ Salvar</button>
     </div>
   </div>
 </div>
@@ -230,148 +482,145 @@ input[type=range]{width:50px;accent-color:var(--gold)}
 <div class="toast" id="toast"></div>
 
 <script>
-'use strict';
-// ── PEÇAS ────────────────────────────────────────────────────
 var P={w:{k:'♔',q:'♕',r:'♖',b:'♗',n:'♘',p:'♙'},b:{k:'♚',q:'♛',r:'♜',b:'♝',n:'♞',p:'♟'}};
 var PN={k:'Rei',q:'Dama',r:'Torre',b:'Bispo',n:'Cavalo',p:'Peão'};
 var PV={k:0,q:9,r:5,b:3,n:3,p:1};
-var CTR=['d4','d5','e4','e5'];
-var XCTR=['c3','c4','c5','c6','d3','d6','e3','e6','f3','f4','f5','f6','d4','d5','e4','e5'];
+var CTR=['d4','d5','e4','e5'],XCTR=['c3','c4','c5','c6','d3','d6','e3','e6','f3','f4','f5','f6','d4','d5','e4','e5'];
 var ST={w:{n:['b1','g1'],b:['c1','f1'],r:['a1','h1'],q:['d1'],k:['e1']},b:{n:['b8','g8'],b:['c8','f8'],r:['a8','h8'],q:['d8'],k:['e8']}};
-var PREFIX='chess_study_game_';
+var PFX='chess_study_';
 
-// ── BIBLIOTECA ───────────────────────────────────────────────
+// ── BIBLIOTECA ─────────────────────────────────────────────
 var LIB=[
-{id:'opera',t:'Partida da Ópera',w:'Paul Morphy',b:'Duque de Brunswick & Conde Isouard',d:'1858',e:'Paris, Ópera Italiana, 1858',r:'1-0',o:'Defesa Philidor (C41)',ds:'17 lances imortais. Exemplo supremo de desenvolvimento e ataque combinado.',
-pgn:'[Event "Paris Opera"][White "Paul Morphy"][Black "Duke of Brunswick"][Date "1858"][Result "1-0"]\n1. e4 e5 2. Nf3 d6 3. d4 Bg4 4. dxe5 Bxf3 5. Qxf3 dxe5 6. Bc4 Nf6 7. Qb3 Qe7 8. Nc3 c6 9. Bg5 b5 10. Nxb5 cxb5 11. Bxb5+ Nbd7 12. O-O-O Rd8 13. Rxd7 Rxd7 14. Rd1 Qe6 15. Bxd7+ Nxd7 16. Qb8+ Nxb8 17. Rd8# 1-0',
-an:{5:'3...Bg4 — Os negros trocam o bispo pelo cavalo, mas perdem tempo de desenvolvimento. Morphy aproveitará com energia implacável.',6:'4.dxe5 — Centro aberto com energia. As brancas lideram o desenvolvimento em vantagem crescente.',8:'5.Qxf3 — Par de bispos conquistado. Três peças brancas ativas contra apenas uma negra.',16:'9.Bg5! — Pino devastador. O Nf6 está amarrado — mover o cavalo entregaria a dama.',18:'10.Nxb5!! — Sacrifício de peça para abrir a coluna c e expor o rei. Morphy prefere o ataque.',20:'11.Bxb5+ — O rei negro perde o roque para sempre. Posição indefensável.',22:'12.O-O-O — Roque da dama: torres nas colunas abertas. Artilharia pronta.',24:'13.Rxd7! — Sacrifício de qualidade para atividade máxima.',28:'15.Bxd7+ — Segundo sacrifício: a dama é atraída para d7, perdendo a defesa do rei.',30:'16.Qb8+!! — A dama branca se imola. A mais bela jogada desta partida.',32:'17.Rd8# — Xeque-mate com a torre. 17 lances. Uma lição eterna.'}
+{id:'opera',t:'Partida da Ópera',w:'Paul Morphy',b:'Duque de Brunswick & Conde Isouard',d:'1858',e:'Paris, Ópera Italiana, 1858',r:'1-0',o:'Defesa Philidor (C41)',ds:'17 lances imortais. Exemplo supremo de desenvolvimento de peças e ataque combinado.',
+pgn:'[Event "Paris Opera"]\n[White "Paul Morphy"]\n[Black "Duke of Brunswick"]\n[Date "1858"]\n[Result "1-0"]\n\n1. e4 e5 2. Nf3 d6 3. d4 Bg4 4. dxe5 Bxf3 5. Qxf3 dxe5 6. Bc4 Nf6 7. Qb3 Qe7 8. Nc3 c6 9. Bg5 b5 10. Nxb5 cxb5 11. Bxb5+ Nbd7 12. O-O-O Rd8 13. Rxd7 Rxd7 14. Rd1 Qe6 15. Bxd7+ Nxd7 16. Qb8+ Nxb8 17. Rd8# 1-0',
+an:{5:'3...Bg4 — Os negros trocam o bispo pelo cavalo, perdendo tempo de desenvolvimento. Morphy aproveitará com energia implacável.',6:'4.dxe5 — Morphy abre o centro. As brancas lideram o desenvolvimento em vantagem crescente.',8:'5.Qxf3 — Par de bispos conquistado. Três peças brancas ativas contra apenas uma negra.',16:'9.Bg5! — Pino devastador: o Nf6 está amarrado. Mover o cavalo entregaria a dama.',18:'10.Nxb5!! — Sacrifício de peça! Morphy abre a coluna c e expõe o rei. Prefere o ataque ao material.',20:'11.Bxb5+ — O rei negro perde o roque para sempre. Posição indefensável.',22:'12.O-O-O — Roque da dama. Torres nas colunas abertas. Artilharia pronta para o assalto.',24:'13.Rxd7! — Sacrifício de qualidade para atividade máxima. A torre entra com força.',28:'15.Bxd7+ — A dama adversária é atraída para d7, perdendo a defesa do rei.',30:'16.Qb8+!! — A dama branca se imola. A mais bela jogada desta partida.',32:'17.Rd8# — Xeque-mate com a torre! Em 17 lances, uma lição eterna.'}
 },{id:'immortal',t:'A Partida Imortal',w:'Adolf Anderssen',b:'Lionel Kieseritzky',d:'1851',e:'Londres, Partida Informal, 1851',r:'1-0',o:'Gambito do Rei (C33)',ds:'Anderssen sacrifica as duas torres, o bispo e a dama para dar xeque-mate. A partida mais brilhante da história.',
-pgn:'[Event "London Casual"][White "Adolf Anderssen"][Black "Lionel Kieseritzky"][Date "1851"][Result "1-0"]\n1. e4 e5 2. f4 exf4 3. Bc4 Qh4+ 4. Kf1 b5 5. Bxb5 Nf6 6. Nf3 Qh6 7. d3 Nh5 8. Nh4 Qg5 9. Nf5 c6 10. g4 Nf6 11. Rg1 cxb5 12. h4 Qg6 13. h5 Qg5 14. Qf3 Ng8 15. Bxf4 Qf6 16. Nc3 Bc5 17. Nd5 Qxb2 18. Bd6 Bxg1 19. e5 Qxa1+ 20. Ke2 Na6 21. Nxg7+ Kd8 22. Qf6+ Nxf6 23. Be7# 1-0',
-an:{2:'2.f4 — Gambito do Rei: peão entregue pelo controle do centro e impulso de ataque. Estilo romântico do séc. XIX.',6:'4.Kf1! — Anderssen aceita mover o rei para manter o bispo em c4. Segurança sacrificada pelo ataque.',20:'11.Rg1 — As brancas abandonam a torre h1! O ataque vale mais que qualquer material.',30:'16.Nc3 — Desenvolvimento puro em meio ao caos.',32:'17.Nd5! — Cavalo em d5, ameaçando múltiplos alvos. Posição negra entra em colapso.',34:'18.Bd6! — Sacrifício do bispo, bloqueando a dama negra.',36:'19.e5 — Terceiro sacrifício consecutivo. Peça após peça em favor do ataque.',38:'20.Ke2!! — O rei branco marcha para o centro em pleno ataque adversário. Audácia absoluta.',40:'21.Nxg7+! — O cavalo se sacrifica para criar o corredor fatal.',42:'22.Qf6+! — A dama branca se imola para limpar o caminho do bispo.',44:'23.Be7# — O humilde bispo dá o xeque-mate. Imortal. Para sempre.'}
-},{id:'century',t:'O Jogo do Século',w:'Donald Byrne',b:'Robert James Fischer',d:'1956',e:'Rosenwald Trophy, Nova York, 1956',r:'0-1',o:'Grünfeld (D92)',ds:'Fischer com 13 anos. O sacrifício de dama no 17º lance é uma das jogadas mais geniais já vistas no xadrez.',
-pgn:'[Event "Rosenwald Trophy"][White "Donald Byrne"][Black "Robert James Fischer"][Date "1956"][Result "0-1"]\n1. Nf3 Nf6 2. c4 g6 3. Nc3 Bg7 4. d4 O-O 5. Bf4 d5 6. Qb3 dxc4 7. Qxc4 c6 8. e4 Nbd7 9. Rd1 Nb6 10. Qc5 Bg4 11. Bg5 Na4 12. Qa3 Nxc3 13. bxc3 Nxe4 14. Bxe7 Qb6 15. Bc4 Nxc3 16. Bc5 Rfe8+ 17. Kf1 Be6 18. Bxb6 Bxc4+ 19. Kg1 Ne2+ 20. Kf1 Nxd4+ 21. Kg1 Ne2+ 22. Kf1 Nc3+ 23. Kg1 axb6 24. Qb4 Ra4 25. Qxb6 Nxd1 26. h3 Rxa2 27. Kh2 Nxf2 28. Re1 Rxe1 29. Qd8+ Bf8 30. Nxe1 Bd5 31. Nf3 Ne4 32. Qb8 b5 33. h4 h5 34. Ne5 Kg7 35. Kg1 Bc5+ 36. Kf1 Ng3+ 37. Ke1 Bb4+ 38. Kd1 Bb3+ 39. Kc1 Ne2+ 40. Kb1 Nc3+ 41. Kc1 Rc2# 0-1',
-an:{21:'11...Na4! — Fischer inicia a combinação. 13 anos, vendo 10 lances à frente.',25:'13...Nxe4! — O cavalo invade. Byrne parece ganhar material, mas Fischer tem tudo calculado.',33:'17...Be6!! — Sacrifício da dama! Em troca: posição dominante com duas peças menores ativas.',35:'18...Bxc4+ — Cada lance recupera material E cria novo ataque. Economia combinatória perfeita.',37:'19...Ne2+ — Cheques perpétuos enquanto toda a armada negra se coordena.',81:'41...Rc2# — Xeque-mate. 13 anos. Nova York, 1956. Gênio puro.'}
-},{id:'evergreen',t:'A Partida Sempre Viva',w:'Adolf Anderssen',b:'Jean Dufresne',d:'1852',e:'Berlim, Partida Informal, 1852',r:'1-0',o:'Gambito Evans (C52)',ds:'Sacrifícios de torre, bispo e dama para um xeque-mate fulminante. Mais de 170 anos e nunca perde o brilho.',
-pgn:'[Event "Berlin Casual"][White "Adolf Anderssen"][Black "Jean Dufresne"][Date "1852"][Result "1-0"]\n1. e4 e5 2. Nf3 Nc6 3. Bc4 Bc5 4. b4 Bxb4 5. c3 Ba5 6. d4 exd4 7. O-O d3 8. Qb3 Qf6 9. e5 Qg6 10. Re1 Nge7 11. Ba3 b5 12. Qxb5 Rb8 13. Qa4 Bb6 14. Nbd2 Bb7 15. Ne4 Qf5 16. Bxd3 Qh5 17. Nf6+ gxf6 18. exf6 Rg8 19. Rad1 Qxf3 20. Rxe7+ Nxe7 21. Qxd7+ Kxd7 22. Bf5+ Ke8 23. Bd7+ Kf8 24. Bxe7# 1-0',
-an:{6:'4.b4! — Gambito Evans, uma das aberturas mais agressivas do xadrez romântico.',20:'11.Ba3! — Pino poderoso. Os negros não podem mais rocar.',32:'17.Nf6+! — O cavalo se sacrifica para destruir a estrutura de peões negra.',38:'20.Rxe7+! — Sacrifício de torre para abrir a diagonal do bispo.',40:'21.Qxd7+! — A dama branca se sacrifica, atraindo o rei para posição fatal.',46:'24.Bxe7# — O bispo entrega o xeque-mate. Sempre Viva: 170+ anos e ainda encanta.'}
-},{id:'kasparov',t:'A Imortal de Kasparov',w:'Garry Kasparov',b:'Veselin Topalov',d:'1999',e:'Wijk aan Zee, 1999',r:'1-0',o:'Pirc/Moderno (B06)',ds:'A melhor partida de Kasparov. A sequência com 24.Rxd4! inaugurou 10 lances de sacrifícios consecutivos.',
-pgn:'[Event "Hoogovens Wijk aan Zee"][White "Garry Kasparov"][Black "Veselin Topalov"][Date "1999"][Result "1-0"]\n1. e4 d6 2. d4 Nf6 3. Nc3 g6 4. Be3 Bg7 5. Qd2 c6 6. f3 b5 7. Nge2 Nbd7 8. Bh6 Bxh6 9. Qxh6 Bb7 10. a3 e5 11. O-O-O Qe7 12. Kb1 a6 13. Nc1 O-O-O 14. Nb3 exd4 15. Rxd4 c5 16. Rd1 Nb6 17. g3 Kb8 18. Na5 Ba8 19. Bh3 d5 20. Qf4+ Ka7 21. Rhe1 d4 22. Nd5 Nbxd5 23. exd5 Qd6 24. Rxd4 cxd4 25. Re7+ Kb6 26. Qxd4+ Kxa5 27. b4+ Ka4 28. Qc3 Qxd5 29. Ra7 Bb7 30. Rxb7 Qc4 31. Qxf6 Kxa3 32. Qxa6+ Kxb4 33. c3+ Kxc3 34. Ra7 1-0',
-an:{14:'8.Bh6 — Kasparov elimina o bispo-guardião do rei negro. Estratégia de longo prazo.',34:'18.Na5! — O cavalo inicia uma caçada ao rei negro pelo tabuleiro inteiro.',46:'24.Rxd4!! — O sacrifício inaugural da sequência lendária.',48:'25.Re7+! — Torre penetra no 7º rank com tempo. Topalov não tem como respirar.',50:'26.Qxd4+ — Dama entra no ataque. Cada lance força a única resposta.',52:'27.b4+! — Peão simples torna-se arma mortal.',60:'31.Qxf6! — Kasparov sacrifica a dama para criar a rede de mate definitiva.',66:'34.Ra7 — Rei negro sem saída. Topalov resigna. Obra-prima absoluta.'}
+pgn:'[Event "London Casual"]\n[White "Adolf Anderssen"]\n[Black "Lionel Kieseritzky"]\n[Date "1851"]\n[Result "1-0"]\n\n1. e4 e5 2. f4 exf4 3. Bc4 Qh4+ 4. Kf1 b5 5. Bxb5 Nf6 6. Nf3 Qh6 7. d3 Nh5 8. Nh4 Qg5 9. Nf5 c6 10. g4 Nf6 11. Rg1 cxb5 12. h4 Qg6 13. h5 Qg5 14. Qf3 Ng8 15. Bxf4 Qf6 16. Nc3 Bc5 17. Nd5 Qxb2 18. Bd6 Bxg1 19. e5 Qxa1+ 20. Ke2 Na6 21. Nxg7+ Kd8 22. Qf6+ Nxf6 23. Be7# 1-0',
+an:{2:'2.f4 — Gambito do Rei: peão entregue pelo controle do centro e impulso de ataque. Estilo romântico do século XIX.',6:'4.Kf1! — Anderssen move o rei para manter o bispo em c4. A segurança pessoal é sacrificada pelo ataque.',20:'11.Rg1 — As brancas abandonam voluntariamente a torre h1! O ataque vale mais que qualquer material.',30:'16.Nc3 — Desenvolvimento puro em meio ao caos. Anderssen não perde tempo capturando.',32:'17.Nd5! — O cavalo em d5 ameaça múltiplos alvos. A posição negra entra em colapso.',34:'18.Bd6! — Sacrifício do bispo: bloqueia a dama negra e abre o caminho para o golpe final.',36:'19.e5 — Terceiro sacrifício consecutivo. Peça após peça entregue pelo ataque.',38:'20.Ke2!! — O rei branco marcha para o centro em pleno ataque adversário. Audácia absoluta.',40:'21.Nxg7+! — O cavalo cria o corredor fatal para o xeque-mate.',42:'22.Qf6+! — A dama branca se imola para limpar o caminho do bispo.',44:'23.Be7# — O humilde bispo dá o xeque-mate. Imortal. Para sempre.'}
+},{id:'century',t:'O Jogo do Século',w:'Donald Byrne',b:'Robert James Fischer',d:'1956',e:'Rosenwald Trophy, Nova York, 1956',r:'0-1',o:'Grünfeld (D92)',ds:'Fischer com 13 anos. O sacrifício de dama no 17º lance é uma das jogadas mais geniais já vistas.',
+pgn:'[Event "Rosenwald Trophy"]\n[White "Donald Byrne"]\n[Black "Robert James Fischer"]\n[Date "1956"]\n[Result "0-1"]\n\n1. Nf3 Nf6 2. c4 g6 3. Nc3 Bg7 4. d4 O-O 5. Bf4 d5 6. Qb3 dxc4 7. Qxc4 c6 8. e4 Nbd7 9. Rd1 Nb6 10. Qc5 Bg4 11. Bg5 Na4 12. Qa3 Nxc3 13. bxc3 Nxe4 14. Bxe7 Qb6 15. Bc4 Nxc3 16. Bc5 Rfe8+ 17. Kf1 Be6 18. Bxb6 Bxc4+ 19. Kg1 Ne2+ 20. Kf1 Nxd4+ 21. Kg1 Ne2+ 22. Kf1 Nc3+ 23. Kg1 axb6 24. Qb4 Ra4 25. Qxb6 Nxd1 26. h3 Rxa2 27. Kh2 Nxf2 28. Re1 Rxe1 29. Qd8+ Bf8 30. Nxe1 Bd5 31. Nf3 Ne4 32. Qb8 b5 33. h4 h5 34. Ne5 Kg7 35. Kg1 Bc5+ 36. Kf1 Ng3+ 37. Ke1 Bb4+ 38. Kd1 Bb3+ 39. Kc1 Ne2+ 40. Kb1 Nc3+ 41. Kc1 Rc2# 0-1',
+an:{21:'11...Na4! — Fischer lança a combinação que mudaria a história. 13 anos vendo 10 lances à frente.',25:'13...Nxe4! — O cavalo invade sem medo. Byrne parece estar ganhando, mas Fischer tem tudo calculado.',33:'17...Be6!! — Sacrifício da dama! Em troca: posição dominante com duas peças menores altamente ativas.',35:'18...Bxc4+ — Cada lance recupera material E cria novo ataque. Economia combinatória perfeita.',37:'19...Ne2+ — Cheques perpétuos enquanto toda a armada negra se coordena em torno do rei.',81:'41...Rc2# — Xeque-mate. 13 anos de idade. Nova York, 1956. Gênio puro.'}
+},{id:'evergreen',t:'A Partida Sempre Viva',w:'Adolf Anderssen',b:'Jean Dufresne',d:'1852',e:'Berlim, Partida Informal, 1852',r:'1-0',o:'Gambito Evans (C52)',ds:'Sacrifícios de torre, bispo e dama para um xeque-mate fulminante. 170 anos depois e nunca perde o brilho.',
+pgn:'[Event "Berlin Casual"]\n[White "Adolf Anderssen"]\n[Black "Jean Dufresne"]\n[Date "1852"]\n[Result "1-0"]\n\n1. e4 e5 2. Nf3 Nc6 3. Bc4 Bc5 4. b4 Bxb4 5. c3 Ba5 6. d4 exd4 7. O-O d3 8. Qb3 Qf6 9. e5 Qg6 10. Re1 Nge7 11. Ba3 b5 12. Qxb5 Rb8 13. Qa4 Bb6 14. Nbd2 Bb7 15. Ne4 Qf5 16. Bxd3 Qh5 17. Nf6+ gxf6 18. exf6 Rg8 19. Rad1 Qxf3 20. Rxe7+ Nxe7 21. Qxd7+ Kxd7 22. Bf5+ Ke8 23. Bd7+ Kf8 24. Bxe7# 1-0',
+an:{6:'4.b4! — Gambito Evans, uma das aberturas mais agressivas do xadrez romântico do século XIX.',20:'11.Ba3! — Pino poderoso: os negros não podem mais rocar. A posição branca é esmagadora.',32:'17.Nf6+! — O cavalo se sacrifica para destruir a estrutura de peões e expor o rei negro.',38:'20.Rxe7+! — Sacrifício de torre para abrir a diagonal do bispo. Segundo grande sacrifício.',40:'21.Qxd7+! — A dama branca se sacrifica, atraindo o rei para posição fatal.',46:'24.Bxe7# — O bispo entrega o xeque-mate. Sempre Viva: mais de 170 anos e ainda encanta.'}
+},{id:'kasparov',t:'A Imortal de Kasparov',w:'Garry Kasparov',b:'Veselin Topalov',d:'1999',e:'Wijk aan Zee, 1999',r:'1-0',o:'Pirc/Moderno (B06)',ds:'A melhor partida de Kasparov. A sequência com 24.Rxd4! inaugurou 10 lances de sacrifícios consecutivos na maior profundidade combinatória.',
+pgn:'[Event "Hoogovens Wijk aan Zee"]\n[White "Garry Kasparov"]\n[Black "Veselin Topalov"]\n[Date "1999"]\n[Result "1-0"]\n\n1. e4 d6 2. d4 Nf6 3. Nc3 g6 4. Be3 Bg7 5. Qd2 c6 6. f3 b5 7. Nge2 Nbd7 8. Bh6 Bxh6 9. Qxh6 Bb7 10. a3 e5 11. O-O-O Qe7 12. Kb1 a6 13. Nc1 O-O-O 14. Nb3 exd4 15. Rxd4 c5 16. Rd1 Nb6 17. g3 Kb8 18. Na5 Ba8 19. Bh3 d5 20. Qf4+ Ka7 21. Rhe1 d4 22. Nd5 Nbxd5 23. exd5 Qd6 24. Rxd4 cxd4 25. Re7+ Kb6 26. Qxd4+ Kxa5 27. b4+ Ka4 28. Qc3 Qxd5 29. Ra7 Bb7 30. Rxb7 Qc4 31. Qxf6 Kxa3 32. Qxa6+ Kxb4 33. c3+ Kxc3 34. Ra7 1-0',
+an:{14:'8.Bh6 — Kasparov elimina o bispo-guardião do rei negro. Estratégia de enfraquecimento de longo prazo.',34:'18.Na5! — O cavalo inicia uma caçada ao rei negro por todo o tabuleiro.',46:'24.Rxd4!! — O sacrifício inaugural da sequência lendária. Torre entregue por ataque imparável.',48:'25.Re7+! — Torre penetra no 7º rank com tempo. Topalov não encontra defesa.',50:'26.Qxd4+ — Dama entra no ataque, forçando cada resposta adversária.',52:'27.b4+! — Um simples peão se torna arma mortal, guiando o rei para a armadilha.',60:'31.Qxf6! — Kasparov sacrifica a dama para criar a rede de mate definitiva.',66:'34.Ra7 — Rei negro sem saída. Topalov resigna. Obra-prima absoluta.'}
 }];
 
-// ── ESTADO ──────────────────────────────────────────────────
+// ── ESTADO ─────────────────────────────────────────────────
 var game, allMoves=[], curIdx=-1, anns={}, flipped=false, lastMove=null;
-var timer=null, results=[], fenHistory=[], evalCache={}, annTimer=null;
-var gameMeta={white:'',black:'',event:'',date:'',result:''}, currentPGN='';
+var timer=null, results=[], fenH=[], evCache={}, annTmr=null;
+var meta={w:'',b:'',e:'',d:'',r:''}, curPGN='';
 
-// ── ANÁLISE POSICIONAL ──────────────────────────────────────
-function pn(t){return PN[t]||t}
-function mv(t){return PV[t]||0}
-function isCtr(s){return CTR.indexOf(s)>=0}
-function isXCtr(s){return XCTR.indexOf(s)>=0}
-function isSt(piece,color,sq){return(ST[color][piece]||[]).indexOf(sq)>=0}
-function cMat(fen,c){var g=new Chess(fen),t=0;g.board().forEach(function(r){r.forEach(function(p){if(p&&p.color===c&&p.type!=='k')t+=mv(p.type)})});return t}
-function isFOpen(fen,f){var g=new Chess(fen),fi=f.charCodeAt(0)-97;return!g.board().some(function(r){var p=r[fi];return p&&p.type==='p'})}
-function isFHalf(fen,f,c){var g=new Chess(fen),fi=f.charCodeAt(0)-97,fr=false,en=false;g.board().forEach(function(r){var p=r[fi];if(p&&p.type==='p'){p.color===c?fr=true:en=true}});return !fr&&en}
-function cDev(fen,c){var g=new Chess(fen),n=0;g.board().forEach(function(r,ri){r.forEach(function(p,fi){if(!p||p.color!==c||p.type==='p'||p.type==='k')return;var sq=String.fromCharCode(97+fi)+(8-ri);if(!isSt(p.type,c,sq))n++})});return n}
-function fPassed(fen,c){var g=new Chess(fen),opp=c==='w'?'b':'w',bd=g.board(),ps=[];bd.forEach(function(r,ri){r.forEach(function(p,fi){if(!p||p.color!==c||p.type!=='p')return;var dir=c==='w'?-1:1,bl=false;for(var rr=ri+dir;rr>=0&&rr<8;rr+=dir){for(var ff=Math.max(0,fi-1);ff<=Math.min(7,fi+1);ff++){var ep=bd[rr][ff];if(ep&&ep.color===opp&&ep.type==='p'){bl=true;break}}}if(!bl)ps.push(String.fromCharCode(97+fi)+(8-ri))})});return ps}
-function fDoubled(fen,c){var g=new Chess(fen),fs={};g.board().forEach(function(r,ri){r.forEach(function(p,fi){if(p&&p.color===c&&p.type==='p'){var f=String.fromCharCode(97+fi);fs[f]=(fs[f]||0)+1}})});return Object.keys(fs).filter(function(f){return fs[f]>1})}
-function getPhase(n){return n<12?'abertura':n<30?'meio-jogo':'final de jogo'}
+// ── HELPERS ANÁLISE ────────────────────────────────────────
+function cMat(fen,c){try{var g=new Chess(fen),t=0;g.board().forEach(function(r){r.forEach(function(p){if(p&&p.color===c&&p.type!=='k')t+=(PV[p.type]||0)})});return t}catch(e){return 0}}
+function isFOpen(fen,f){try{var g=new Chess(fen),fi=f.charCodeAt(0)-97;return!g.board().some(function(r){var p=r[fi];return p&&p.type==='p'})}catch(e){return false}}
+function isFHalf(fen,f,c){try{var g=new Chess(fen),fi=f.charCodeAt(0)-97,fr=false,en=false;g.board().forEach(function(r){var p=r[fi];if(p&&p.type==='p'){p.color===c?fr=true:en=true}});return!fr&&en}catch(e){return false}}
+function cDev(fen,c){try{var g=new Chess(fen),n=0;g.board().forEach(function(r,ri){r.forEach(function(p,fi){if(!p||p.color!==c||p.type==='p'||p.type==='k')return;var sq=String.fromCharCode(97+fi)+(8-ri);if((ST[c][p.type]||[]).indexOf(sq)<0)n++})});return n}catch(e){return 0}}
+function fPassed(fen,c){try{var g=new Chess(fen),opp=c==='w'?'b':'w',bd=g.board(),ps=[];bd.forEach(function(r,ri){r.forEach(function(p,fi){if(!p||p.color!==c||p.type!=='p')return;var dir=c==='w'?-1:1,bl=false;for(var rr=ri+dir;rr>=0&&rr<8;rr+=dir){for(var ff=Math.max(0,fi-1);ff<=Math.min(7,fi+1);ff++){var ep=bd[rr][ff];if(ep&&ep.color===opp&&ep.type==='p'){bl=true;break}}}if(!bl)ps.push(String.fromCharCode(97+fi)+(8-ri))})});return ps}catch(e){return[]}}
+function fDoubled(fen,c){try{var g=new Chess(fen),fs={};g.board().forEach(function(r,ri){r.forEach(function(p,fi){if(p&&p.color===c&&p.type==='p'){var f=String.fromCharCode(97+fi);fs[f]=(fs[f]||0)+1}})});return Object.keys(fs).filter(function(f){return fs[f]>1})}catch(e){return[]}}
 
 function analyzeMove(mo,fb,fa,pi){
+  if(!mo||!fb||!fa)return'';
   var c=mo.color,opp=c==='w'?'b':'w';
   var side=c==='w'?'Brancas':'Negras',oppS=c==='w'?'Negras':'Brancas';
   var piece=mo.piece,from=mo.from,to=mo.to,flags=mo.flags||'';
   var mn=Math.floor(pi/2)+1,parts=[];
   if(flags.indexOf('k')>=0){
-    parts.push('Roque pequeno: o rei das '+side+' se abriga na ala do rei, protegido pelo muro de peões. A torre assume a coluna f — posição ativa imediata.');
-  } else if(flags.indexOf('q')>=0){
-    parts.push('Roque longo: o rei das '+side+' busca abrigo na ala da dama. Gera frequentemente jogo em flancos opostos, com ambos os lados atacando os reis adversários.');
-  } else if(flags.indexOf('e')>=0){
-    parts.push('Captura en passant em '+to+': elimina o peão adversário que avançou dois quadros. Preserva a estrutura de peões das '+side+'.');
-  } else if(mo.promotion){
+    parts.push('Roque pequeno: o rei das '+side+' se abriga na ala do rei, protegido pelo muro de peões. A torre assume a coluna f com atividade imediata.');
+  }else if(flags.indexOf('q')>=0){
+    parts.push('Roque longo: o rei das '+side+' busca abrigo na ala da dama. Frequentemente gera jogo em flancos opostos, com ambos os lados atacando os reis adversários.');
+  }else if(flags.indexOf('e')>=0){
+    parts.push('Captura en passant em '+to+': elimina o peão adversário que avançou dois quadros, preservando a estrutura de peões das '+side+'.');
+  }else if(mo.promotion){
     var prN={q:'Dama',r:'Torre',b:'Bispo',n:'Cavalo'}[mo.promotion]||'peça';
-    parts.push('Promoção! O peão das '+side+' alcança a última fileira e se transforma em '+prN+'. Mudança de material decisiva.');
-  } else if(mo.captured){
-    var cv=mv(mo.captured),pv2=mv(piece),diff=cv-pv2;
-    if(diff>0) parts.push(pn(piece)+' captura '+pn(mo.captured)+' em '+to+', obtendo ganho de +'+diff+' ponto(s). As '+side+' saem desta troca em vantagem material concreta.');
-    else if(diff===0) parts.push('Troca de peças equivalentes em '+to+': '+pn(piece)+' ('+pv2+'pts) por '+pn(mo.captured)+' ('+cv+'pts). Simplificação que pode favorecer quem tem vantagem posicional.');
-    else parts.push('Sacrifício! '+pn(piece)+' ('+pv2+'pts) captura '+pn(mo.captured)+' ('+cv+'pts) em '+to+', entregando '+Math.abs(diff)+' ponto(s). As '+side+' buscam compensação em atividade, iniciativa ou combinação tática.');
-  } else {
-    var isDev=isSt(piece,c,from)&&piece!=='p'&&piece!=='k';
-    var toCtr=isCtr(to),toXCtr=isXCtr(to);
-    var rank=parseInt(to[1]),is7=(c==='w'&&rank===7)||(c==='b'&&rank===2);
-    var isRim=to[0]==='a'||to[0]==='h';
+    parts.push('Promoção! O peão das '+side+' alcança a última fileira e se transforma em '+prN+'. Mudança de material decisiva para o resultado da partida.');
+  }else if(mo.captured){
+    var cv=PV[mo.captured]||0,pv2=PV[piece]||0,diff=cv-pv2;
+    if(diff>0) parts.push((PN[piece]||piece)+' captura '+(PN[mo.captured]||mo.captured)+' em '+to+', obtendo ganho de +'+diff+' ponto(s). As '+side+' saem desta troca em vantagem material concreta.');
+    else if(diff===0) parts.push('Troca de peças equivalentes em '+to+': '+(PN[piece]||piece)+' ('+pv2+'pts) por '+(PN[mo.captured]||mo.captured)+' ('+cv+'pts). Simplificação que pode favorecer quem tem vantagem posicional.');
+    else parts.push('Sacrifício! '+(PN[piece]||piece)+' ('+pv2+'pts) captura '+(PN[mo.captured]||mo.captured)+' ('+cv+'pts) em '+to+', entregando '+Math.abs(diff)+' ponto(s) em busca de compensação tática ou posicional.');
+  }else{
+    var isDev=(ST[c][piece]||[]).indexOf(from)>=0&&piece!=='p'&&piece!=='k';
+    var toCtr=CTR.indexOf(to)>=0,toXCtr=XCTR.indexOf(to)>=0;
+    var rank=parseInt(to[1]),is7=(c==='w'&&rank===7)||(c==='b'&&rank===2),isRim=to[0]==='a'||to[0]==='h';
     if(piece==='p'){
       if(toCtr) parts.push('Peão avança para '+to+', ocupando o centro. O controle central é fundamental — peões no centro limitam as opções adversárias e concedem espaço para as próprias peças.');
-      else if(toXCtr) parts.push('Peão avança para '+to+', influenciando o centro expandido. Lance típico da '+getPhase(mn)+', buscando controle territorial progressivo.');
+      else if(toXCtr) parts.push('Peão avança para '+to+', influenciando o centro expandido. Lance típico da '+(mn<12?'abertura':mn<30?'meio-jogo':'fase final')+', buscando controle territorial progressivo.');
       else parts.push('Peão avança de '+from+' para '+to+'.');
-    } else if(isDev){
-      parts.push(pn(piece)+' desenvolve de sua casa inicial ('+from+') para '+to+(toCtr||toXCtr?', posição ativa com controle central':'')+'. Cada peça fora da casa inicial aumenta a coordenação do exército das '+side+'.');
-    } else if(piece==='n'&&isRim){
-      parts.push('Cavalo move para a borda ('+to+'). "Cavalo na borda é sempre fraco" — na borda, o cavalo controla apenas 2 a 4 casas, contra as 8 possíveis no centro.');
-    } else if(piece==='r'){
+    }else if(isDev){
+      parts.push((PN[piece]||piece)+' desenvolve de sua casa inicial ('+from+') para '+to+(toCtr||toXCtr?', posição ativa com influência central':'')+'. Cada peça fora da casa inicial aumenta a coordenação e o poder do exército das '+side+'.');
+    }else if(piece==='n'&&isRim){
+      parts.push((PN[piece]||piece)+' move para a borda ('+to+'). Diz o provérbio: "Cavalo na borda é sempre fraco" — na borda controla apenas 2–4 casas, contra as 8 possíveis no centro.');
+    }else if(piece==='r'){
       var file=to[0];
-      if(isFOpen(fa,file)) parts.push('Torre ocupa a coluna '+file.toUpperCase()+' aberta — uma das posições mais fortes para a torre. Sem peões na coluna, a pressão é máxima.');
-      else if(isFHalf(fa,file,c)) parts.push('Torre na coluna '+file.toUpperCase()+' semi-aberta, pressionando o peão adversário remanescente.');
-      else if(is7) parts.push('Torre penetra no 7º rank — posição extremamente agressiva que captura os peões adversários em sua base e restringe o rei inimigo.');
+      if(isFOpen(fa,file)) parts.push('Torre ocupa a coluna '+file.toUpperCase()+' aberta — uma das posições mais poderosas. Sem peões na coluna, a pressão é máxima e constante.');
+      else if(isFHalf(fa,file,c)) parts.push('Torre se posta na coluna '+file.toUpperCase()+' semi-aberta, pressionando o peão adversário remanescente nessa via.');
+      else if(is7) parts.push('Torre penetra no 7º rank — posição extremamente agressiva. Restringe o rei inimigo à última fileira e captura peões adversários em sua base.');
       else parts.push('Torre reposiciona de '+from+' para '+to+'.');
-    } else if(piece==='q'){
-      if(mn<=6) parts.push('Dama entra cedo em cena (lance '+mn+'). Risco real: a dama pode se tornar alvo de ataques com ganho de tempo, forçando recuos custosos.');
-      else parts.push('Dama reposiciona para '+to+(is7?', penetrando no 7º rank com enorme pressão':'')+'.');
-    } else {
-      parts.push(pn(piece)+' move de '+from+' para '+to+'.');
+    }else if(piece==='q'){
+      if(mn<=6) parts.push('Dama entra cedo em cena (lance '+mn+'). Risco real: pode se tornar alvo de ataques com ganho de tempo, forçando recuos que custam o desenvolvimento.');
+      else parts.push('Dama reposiciona para '+to+(is7?', penetrando no 7º rank com enorme pressão e capacidade de ataque':'')+'.');
+    }else{
+      parts.push((PN[piece]||piece)+' move de '+from+' para '+to+'.');
     }
   }
   var pos=[];
   var devB=cDev(fb,c),devA=cDev(fa,c),devOB=cDev(fb,opp);
   if(devA>devB){var ah=devA-devOB;if(ah>0)pos.push('As '+side+' lideram o desenvolvimento em '+ah+' peça(s).')}
-  if(mo.captured&&piece==='p'){var fl=to[0];if(isFOpen(fa,fl))pos.push('A captura abre a coluna '+fl.toUpperCase()+', valorizando torres nessa via.')}
+  if(mo.captured&&piece==='p'){var fl=to[0];if(isFOpen(fa,fl))pos.push('A captura abre a coluna '+fl.toUpperCase()+', valorizando imediatamente as torres nessa via.')}
   var pA=fPassed(fa,c),pB=fPassed(fb,c);
   var nP=pA.filter(function(s){return pB.indexOf(s)<0});
-  if(nP.length>0) pos.push('Peão passado criado em '+nP.join(', ')+' — vantagem estrutural permanente pois avança sem oposição de peões adversários.');
+  if(nP.length>0) pos.push('Peão passado criado em '+nP.join(', ')+' — vantagem estrutural permanente, pois avança sem oposição de peões adversários.');
   if(mo.captured){var dA=fDoubled(fa,opp),dB=fDoubled(fb,opp);var nD=dA.filter(function(f){return dB.indexOf(f)<0});if(nD.length>0)pos.push('Peões dobrados adversários criados na coluna '+nD[0].toUpperCase()+' — fraqueza estrutural difícil de defender.')}
   if(pos.length>0) parts.push(pos.join(' '));
-  try{var ga=new Chess(fa);if(ga.in_checkmate())parts.push('⚑ XEQUE-MATE! As '+side+' vencem.');else if(ga.in_check())parts.push('O rei das '+oppS+' está em xeque — a resposta é forçada.');else if(ga.in_stalemate())parts.push('AFOGAMENTO — empate!')}catch(ex){}
+  try{
+    var ga=new Chess(fa);
+    if(ga.in_checkmate()) parts.push('⚑ XEQUE-MATE! As '+side+' vencem a partida.');
+    else if(ga.in_check()) parts.push('O rei das '+oppS+' está em xeque — a resposta é forçada e as opções estão limitadas.');
+    else if(ga.in_stalemate()) parts.push('AFOGAMENTO — empate! As '+oppS+' não têm jogadas legais sem estar em xeque.');
+  }catch(ex){}
   var mW=cMat(fa,'w'),mB=cMat(fa,'b'),df=mW-mB;
-  if(Math.abs(df)>=2){var ld=df>0?'Brancas':'Negras';parts.push('Balanço material: '+ld+' lideram por '+Math.abs(df)+' ponto(s) (Brancas '+mW+' · Negras '+mB+').')}
+  if(Math.abs(df)>=2){var ld=df>0?'Brancas':'Negras';parts.push('Balanço material: '+ld+' lideram por '+Math.abs(df)+' ponto(s) (♔ '+mW+' · ♚ '+mB+').')}
   return parts.join(' ');
 }
 
-// ── LICHESS CLOUD EVAL ──────────────────────────────────────
+// ── LICHESS CLOUD EVAL ─────────────────────────────────────
 async function fetchEval(fen){
-  if(evalCache[fen])return evalCache[fen];
+  if(evCache[fen])return evCache[fen];
   try{
     var r=await fetch('https://lichess.org/api/cloud-eval?fen='+encodeURIComponent(fen)+'&multiPv=1');
     if(!r.ok)return null;
-    var d=await r.json();
-    if(!d.pvs||!d.pvs.length)return null;
-    var pv=d.pvs[0],turn=fen.split(' ')[1];
-    var sn,st;
-    if(pv.mate!==undefined){var m=pv.mate;var ww=(turn==='w'&&m>0)||(turn==='b'&&m<0);sn=ww?9999:-9999;st=ww?'M+'+Math.abs(m):'M-'+Math.abs(m)}
+    var d=await r.json();if(!d.pvs||!d.pvs.length)return null;
+    var pv=d.pvs[0],turn=fen.split(' ')[1],sn,st;
+    if(pv.mate!==undefined){var m=pv.mate,ww=(turn==='w'&&m>0)||(turn==='b'&&m<0);sn=ww?9999:-9999;st=ww?'M+'+Math.abs(m):'M-'+Math.abs(m)}
     else{var cp=pv.cp;sn=turn==='w'?cp:-cp;var v=(sn/100).toFixed(1);st=sn>=0?'+'+v:v}
     var bs='';
-    if(pv.moves){var uci=pv.moves.split(' ').slice(0,4),gt=new Chess(fen),ss=[];
+    if(pv.moves){
+      var uci=pv.moves.split(' ').slice(0,5),gt=new Chess(fen),ss=[];
       for(var i=0;i<uci.length;i++){try{var mv2=gt.move({from:uci[i].slice(0,2),to:uci[i].slice(2,4),promotion:uci[i][4]||undefined});if(mv2)ss.push(mv2.san);else break}catch(ex){break}}
-      bs=ss.join(' ')}
-    var res2={sn:sn,st:st,dp:d.depth||0,bs:bs};evalCache[fen]=res2;return res2;
+      bs=ss.join(' ');
+    }
+    var res2={sn:sn,st:st,dp:d.depth||0,bs:bs};evCache[fen]=res2;return res2;
   }catch(ex){return null}
 }
 
 function renderEval(ev){
-  var row=document.getElementById('evalRow'),sc=document.getElementById('evScore'),dp=document.getElementById('evDepth');
-  var bl=document.getElementById('evBestLine'),ew=document.getElementById('evwh'),eb=document.getElementById('evbk');
+  var row=document.getElementById('evalRow'),bl=document.getElementById('evBestLine');
   if(!ev){row.classList.remove('on');bl.classList.remove('on');return}
   row.classList.add('on');
-  var clamp=Math.max(-500,Math.min(500,ev.sn));
-  var wp=Math.max(5,Math.min(95,50+clamp/10));
-  ew.style.width=wp+'%';eb.style.width=(100-wp)+'%';
-  sc.textContent=ev.st;sc.className='evsc '+(ev.sn>30?'pos':ev.sn<-30?'neg':'eq');
-  dp.textContent='prof.'+ev.dp+' · Stockfish/Lichess';
-  if(ev.bs){bl.classList.add('on');bl.textContent='♟ Melhor linha: '+ev.bs}else bl.classList.remove('on');
+  var clamp=Math.max(-500,Math.min(500,ev.sn)),wp=Math.max(4,Math.min(96,50+clamp/10));
+  document.getElementById('evwh').style.width=wp+'%';
+  document.getElementById('evbk').style.width=(100-wp)+'%';
+  var sc=document.getElementById('evScore');sc.textContent=ev.st;
+  sc.className='ev-sc '+(ev.sn>30?'pos':ev.sn<-30?'neg':'eq');
+  document.getElementById('evDepth').textContent='Stockfish/Lichess · prof.'+ev.dp;
+  if(ev.bs){bl.classList.add('on');bl.innerHTML='<strong>Melhor linha:</strong> '+ev.bs}
+  else bl.classList.remove('on');
 }
 
-// ── TABULEIRO ───────────────────────────────────────────────
+// ── TABULEIRO ──────────────────────────────────────────────
 function sq2c(sq){return{f:sq.charCodeAt(0)-97,r:parseInt(sq[1])-1}}
 function renderBoard(){
   var bd=game.board(),el=document.getElementById('board');el.innerHTML='';
@@ -389,18 +638,17 @@ function renderBoard(){
   }}
 }
 
-// ── NAVEGAÇÃO ───────────────────────────────────────────────
+// ── NAVEGAÇÃO ──────────────────────────────────────────────
 function goTo(idx){
   if(!allMoves.length)return;
   idx=Math.max(-1,Math.min(allMoves.length-1,idx));
   game.reset();lastMove=null;var mo=null;
-  for(var i=0;i<=idx;i++) mo=game.move(allMoves[i],{sloppy:true});
+  for(var i=0;i<=idx;i++) mo=game.move(allMoves[i]);
   curIdx=idx;renderBoard();renderMoves();updateCtr();updateAnn(mo);
 }
 function goStart(){goTo(-1)} function goEnd(){goTo(allMoves.length-1)}
 function prev(){goTo(curIdx-1)} function next(){goTo(curIdx+1)}
 function flip(){flipped=!flipped;renderBoard()}
-
 function togglePlay(){
   var btn=document.getElementById('playBtn');
   if(timer){clearInterval(timer);timer=null;btn.textContent='▶';return}
@@ -411,157 +659,231 @@ function togglePlay(){
 }
 function stopPlay(){if(timer){clearInterval(timer);timer=null;document.getElementById('playBtn').textContent='▶'}}
 
-// ── LISTA DE LANCES ─────────────────────────────────────────
+// ── LISTA DE LANCES ────────────────────────────────────────
 function renderMoves(){
   var el=document.getElementById('mvList');
-  if(!allMoves.length){el.innerHTML='<div style="color:var(--txd);font-size:10px">Nenhuma partida carregada.</div>';return}
+  if(!allMoves.length){el.innerHTML='<div style="color:var(--txd);font-size:10px;font-family:var(--fm)">Nenhuma partida carregada.</div>';return}
   var h='';
   for(var i=0;i<allMoves.length;i+=2){
     var n=Math.floor(i/2)+1,w=allMoves[i],b=allMoves[i+1]||'';
-    h+='<div class="mr"><span class="mn">'+n+'.</span>';
+    h+='<div class="mr">';
+    h+='<span class="mn">'+n+'.</span>';
     h+='<span class="mb '+(curIdx===i?'on':'')+(anns[i]?' ha':'')+'" onclick="goTo('+i+')">'+w+'</span>';
-    h+='<span class="mb '+(curIdx===i+1?'on':'')+(anns[i+1]?' ha':'')+'" onclick="goTo('+(i+1)+')">'+b+'</span></div>';
+    h+='<span class="mb '+(curIdx===i+1?'on':'')+(anns[i+1]?' ha':'')+'" onclick="goTo('+(i+1)+')">'+b+'</span>';
+    h+='</div>';
   }
   el.innerHTML=h;
   var cur=el.querySelector('.mb.on');if(cur)cur.scrollIntoView({block:'nearest',behavior:'smooth'});
 }
 function updateCtr(){document.getElementById('moveCtr').textContent=allMoves.length?(curIdx+1)+' / '+allMoves.length:'— / —'}
 
-// ── ANOTAÇÃO ────────────────────────────────────────────────
+// ── ANOTAÇÃO ───────────────────────────────────────────────
 function showAnn(text,type,lbl,mvl){
-  var la=document.getElementById('annLabel');
-  la.textContent=lbl;la.className='alb '+(type==='cur'?'cur':type==='eng'?'eng':'');
+  var la=document.getElementById('annLabel'),lt=document.getElementById('annLabelText');
+  la.className='af-lbl '+(type==='cur'?'cur':type==='eng'?'eng':'');
+  lt.textContent=lbl;
   document.getElementById('annMove').textContent=mvl;
   var box=document.getElementById('annBox');box.textContent=text;
-  box.className='ab '+(type==='cur'?'it':type==='mt'?'mt':'');
+  box.className='af-body '+(type==='cur'?'it':type==='mt'?'mt':'');
 }
-function mvLabel(){if(curIdx<0)return'';return'Lance '+(Math.floor(curIdx/2)+1)+' — '+allMoves[curIdx]+' · '+(curIdx%2===0?'Brancas':'Negras')}
+function mvLabel(){
+  if(curIdx<0)return'';
+  return'Lance '+(Math.floor(curIdx/2)+1)+' — '+allMoves[curIdx]+' · '+(curIdx%2===0?'Brancas':'Negras');
+}
 function updateAnn(mo){
-  if(annTimer){clearTimeout(annTimer);annTimer=null}
+  if(annTmr){clearTimeout(annTmr);annTmr=null}
   renderEval(null);
-  if(curIdx===-1){showAnn('Posição inicial. Use ▶ ou ← → para navegar os lances.','mt','—','');return}
+  if(curIdx===-1){
+    showAnn('Posição inicial. Use ▶ ou ← → para navegar os lances. Lances com ● possuem anotações curatoriais.','mt','—','');
+    return;
+  }
   var lbl=mvLabel(),hard=anns[curIdx];
   if(hard) showAnn(hard,'cur','📖  ANOTAÇÃO CURATORIAL',lbl);
-  else if(mo&&fenHistory[curIdx]){showAnn(analyzeMove(mo,fenHistory[curIdx],fenHistory[curIdx+1]||'',curIdx),'eng','⚙  ANÁLISE POSICIONAL',lbl)}
-  var fen=fenHistory[curIdx+1]||'';
-  if(fen) annTimer=setTimeout(async function(){var ev=await fetchEval(fen);if(ev&&fenHistory[curIdx+1]===fen)renderEval(ev)},300);
+  else if(mo&&fenH[curIdx]) showAnn(analyzeMove(mo,fenH[curIdx],fenH[curIdx+1]||'',curIdx),'eng','⚙  ANÁLISE POSICIONAL',lbl);
+  var fen=fenH[curIdx+1]||'';
+  if(fen) annTmr=setTimeout(async function(){
+    try{var ev=await fetchEval(fen);if(ev&&fenH[curIdx+1]===fen)renderEval(ev)}catch(ex){}
+  },300);
 }
 
-// ── CARREGAR PARTIDA ────────────────────────────────────────
-function buildFenHistory(){var t=new Chess();fenHistory=[t.fen()];for(var i=0;i<allMoves.length;i++){t.move(allMoves[i],{sloppy:true});fenHistory.push(t.fen())}}
-function loadGame(pgn,a,meta){
+// ── CARREGAR PARTIDA ───────────────────────────────────────
+function buildFenH(){var t=new Chess();fenH=[t.fen()];for(var i=0;i<allMoves.length;i++){t.move(allMoves[i]);fenH.push(t.fen())}}
+function loadGame(pgn,a,m){
   stopPlay();var t=new Chess();
-  if(!t.load_pgn(pgn,{sloppy:true})){toast('❌ PGN inválido ou com erros',true);return false}
-  currentPGN=pgn;allMoves=t.history();anns=a||{};curIdx=-1;lastMove=null;
-  gameMeta={white:meta.w||'',black:meta.b||'',event:meta.e||'',date:meta.d||'',result:meta.r||''};
-  buildFenHistory();
-  document.getElementById('pWhite').textContent=meta.w||'?';
-  document.getElementById('pBlack').textContent=meta.b||'?';
-  document.getElementById('resultBadge').innerHTML=meta.r?'<span class="rbdg">'+meta.r+'</span>':'';
-  document.getElementById('evTag').textContent=[meta.e,meta.d].filter(Boolean).join(' · ');
+  var ok=t.load_pgn(pgn);
+  if(!ok){toast('❌ PGN inválido — abra F12 para ver o erro',true);console.error('PGN failed:',pgn.slice(0,120));return false}
+  curPGN=pgn;allMoves=t.history();anns=a||{};curIdx=-1;lastMove=null;
+  meta={w:m.w||'',b:m.b||'',e:m.e||'',d:m.d||'',r:m.r||''};
+  buildFenH();
+  document.getElementById('pWhite').textContent=m.w||'?';
+  document.getElementById('pBlack').textContent=m.b||'?';
+  document.getElementById('resultBadge').innerHTML=m.r?'<span class="rbdg">'+m.r+'</span>':'';
+  document.getElementById('evTag').textContent=[m.e,m.d].filter(Boolean).join(' · ');
   game.reset();renderBoard();renderMoves();updateCtr();
   showAnn('Posição inicial. Use ▶ ou ← → para navegar os lances.','mt','—','');
   renderEval(null);switchTab('mv');return true;
 }
 
-// ── BIBLIOTECA CLÁSSICA ─────────────────────────────────────
+// ── BIBLIOTECA ─────────────────────────────────────────────
 function renderLib(){
   document.getElementById('libList').innerHTML=LIB.map(function(g){
-    return '<div class="gc" data-id="'+g.id+'" onclick="loadLib(\''+g.id+'\')"><div class="gt">'+g.t+'</div><div class="gs">'+g.w+' vs '+g.b+' · '+g.d+'</div><div class="gd">'+g.ds+'</div><span class="bdg">'+g.o+'</span><span class="bdg">'+g.r+'</span></div>';
+    return'<div class="gc" data-id="'+g.id+'" onclick="loadLib(\''+g.id+'\')">'
+      +'<div class="gt">'+g.t+'</div>'
+      +'<div class="gs">'+g.w+' vs '+g.b+' · '+g.d+'</div>'
+      +'<div class="gd">'+g.ds+'</div>'
+      +'<span class="bdg">'+g.o+'</span><span class="bdg">'+g.r+'</span>'
+      +'</div>';
   }).join('');
 }
 function loadLib(id){
-  var g=LIB.filter(function(x){return x.id===id})[0];if(!g)return;
+  var g=null;for(var i=0;i<LIB.length;i++){if(LIB[i].id===id){g=LIB[i];break}}if(!g)return;
   document.querySelectorAll('.gc').forEach(function(c){c.classList.remove('on')});
-  document.querySelector('[data-id="'+id+'"]').classList.add('on');
-  loadGame(g.pgn,g.an,{w:g.w,b:g.b,r:g.r,e:g.e,d:g.d});
-  toast('♟ '+g.t+' carregada');
+  var card=document.querySelector('[data-id="'+id+'"]');if(card)card.classList.add('on');
+  var ok=loadGame(g.pgn,g.an,{w:g.w,b:g.b,r:g.r,e:g.e,d:g.d});
+  if(ok)toast('♟ '+g.t+' carregada');
 }
 
-// ── MINHA BIBLIOTECA (localStorage) ────────────────────────
-function loadUserLibrary(){var gs=getUserGames();renderUserLibrary(gs);document.getElementById('userCount').textContent=gs.length}
-function getUserGames(){var gs=[];for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf(PREFIX)===0){try{gs.push(JSON.parse(localStorage.getItem(k)))}catch(e){}}}return gs.sort(function(a,b){return b.addedAt.localeCompare(a.addedAt)})}
-function renderUserLibrary(gs){
+// ── MINHA BIBLIOTECA ───────────────────────────────────────
+function loadUserLib(){var gs=getUserGames();renderUserLib(gs);document.getElementById('userCount').textContent=gs.length}
+function getUserGames(){
+  var gs=[];
+  for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf(PFX)===0){try{gs.push(JSON.parse(localStorage.getItem(k)))}catch(e){}}}
+  return gs.sort(function(a,b){return b.addedAt.localeCompare(a.addedAt)});
+}
+function renderUserLib(gs){
   var el=document.getElementById('userList');
   if(!gs.length){el.innerHTML='<div class="elib">Biblioteca pessoal vazia.<br>Importe partidas e clique em <strong>💾 Salvar</strong>.</div>';return}
   el.innerHTML=gs.map(function(g){
     var tags=(g.tags||[]).map(function(t){return'<span class="bdg u">'+t+'</span>'}).join('');
-    var note=g.note?'<div class="gd" style="margin-top:4px;font-style:italic">"'+g.note+'"</div>':'';
-    return'<div class="gc" onclick="loadUserGame(\''+g.id+'\')" >'+'<button class="del" onclick="deleteGame(\''+g.id+'\',event)">×</button>'+'<div class="gt" style="font-size:13px">'+g.name+'</div>'+'<div class="gs">'+g.white+' vs '+g.black+' · '+(g.date||'s/d')+'</div>'+note+'<span class="bdg">'+g.result+'</span>'+tags+'<span class="bdg" style="opacity:.5">'+new Date(g.addedAt).toLocaleDateString('pt-BR')+'</span>'+'</div>';
+    return'<div class="gc" onclick="loadUserGame(\''+g.id+'\')">'
+      +'<button class="del" onclick="delGame(\''+g.id+'\',event)">×</button>'
+      +'<div class="gt" style="font-size:13px">'+g.name+'</div>'
+      +'<div class="gs">'+g.white+' vs '+g.black+' · '+(g.date||'s/d')+'</div>'
+      +(g.note?'<div class="gd" style="margin-top:4px;font-style:italic">"'+g.note+'"</div>':'')
+      +'<span class="bdg">'+g.result+'</span>'+tags
+      +'<span class="bdg" style="opacity:.5">'+new Date(g.addedAt).toLocaleDateString('pt-BR')+'</span>'
+      +'</div>';
   }).join('');
 }
 function loadUserGame(id){var raw=localStorage.getItem(id);if(!raw){toast('Partida não encontrada',true);return}var g=JSON.parse(raw);loadGame(g.pgn,{},{w:g.white,b:g.black,r:g.result,e:g.event,d:g.date});toast('♟ '+g.name+' carregada')}
-function deleteGame(id,ev){ev.stopPropagation();if(!confirm('Remover esta partida da biblioteca?'))return;localStorage.removeItem(id);loadUserLibrary();toast('Partida removida')}
-function exportLib(){var gs=getUserGames();if(!gs.length){toast('Biblioteca vazia',true);return}var blob=new Blob([gs.map(function(g){return'; '+g.name+'\n'+g.pgn}).join('\n\n')],{type:'text/plain'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='chess_study_'+new Date().toISOString().slice(0,10)+'.pgn';a.click();toast('✓ '+gs.length+' partidas exportadas')}
-
-// ── MODAL SALVAR ────────────────────────────────────────────
-function openSaveModal(){if(!currentPGN){toast('Nenhuma partida carregada',true);return}document.getElementById('saveName').value=gameMeta.white&&gameMeta.black?gameMeta.white+' vs '+gameMeta.black:'';document.getElementById('saveNote').value='';document.querySelectorAll('.mtg').forEach(function(t){t.classList.remove('on')});document.getElementById('modalBg').classList.add('on');setTimeout(function(){document.getElementById('saveName').focus()},100)}
-function closeModal(){document.getElementById('modalBg').classList.remove('on')}
-function confirmSave(){
-  var name=document.getElementById('saveName').value.trim()||gameMeta.white+' vs '+gameMeta.black;
-  var note=document.getElementById('saveNote').value.trim();
-  var tags=Array.from(document.querySelectorAll('.mtg.on')).map(function(t){return t.dataset.tag});
-  var id=PREFIX+Date.now();
-  localStorage.setItem(id,JSON.stringify({id:id,name:name,note:note,tags:tags,pgn:currentPGN,white:gameMeta.white,black:gameMeta.black,event:gameMeta.event,date:gameMeta.date,result:gameMeta.result,addedAt:new Date().toISOString()}));
-  closeModal();loadUserLibrary();switchTab('user');toast('✓ "'+name+'" salva na biblioteca!');
+function delGame(id,ev){ev.stopPropagation();if(!confirm('Remover esta partida da biblioteca?'))return;localStorage.removeItem(id);loadUserLib();toast('Partida removida')}
+function exportLib(){
+  var gs=getUserGames();if(!gs.length){toast('Biblioteca vazia',true);return}
+  var blob=new Blob([gs.map(function(g){return'; '+g.name+'\n'+g.pgn}).join('\n\n')],{type:'text/plain'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='chess_study_'+new Date().toISOString().slice(0,10)+'.pgn';a.click();
+  toast('✓ '+gs.length+' partidas exportadas');
 }
 
-// ── TABS ────────────────────────────────────────────────────
-function switchTab(t){document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('on')});document.querySelectorAll('.pane').forEach(function(x){x.classList.remove('on')});document.getElementById('tab-'+t).classList.add('on');document.getElementById('pane-'+t).classList.add('on')}
+// ── MODAL SALVAR ───────────────────────────────────────────
+function openSaveModal(){
+  if(!curPGN){toast('Nenhuma partida carregada',true);return}
+  document.getElementById('saveName').value=meta.w&&meta.b?meta.w+' vs '+meta.b:'';
+  document.getElementById('saveNote').value='';
+  document.querySelectorAll('.mtg').forEach(function(t){t.classList.remove('on')});
+  document.getElementById('modalBg').classList.add('on');
+  setTimeout(function(){document.getElementById('saveName').focus()},120);
+}
+function closeModal(){document.getElementById('modalBg').classList.remove('on')}
+function confirmSave(){
+  var name=document.getElementById('saveName').value.trim()||meta.w+' vs '+meta.b;
+  var note=document.getElementById('saveNote').value.trim();
+  var tags=[];document.querySelectorAll('.mtg.on').forEach(function(t){tags.push(t.dataset.tag)});
+  var id=PFX+Date.now();
+  localStorage.setItem(id,JSON.stringify({id:id,name:name,note:note,tags:tags,pgn:curPGN,white:meta.w,black:meta.b,event:meta.e,date:meta.d,result:meta.r,addedAt:new Date().toISOString()}));
+  closeModal();loadUserLib();switchTab('user');toast('✓ "'+name+'" salva na biblioteca!');
+}
 
-// ── LICHESS ─────────────────────────────────────────────────
+// ── TABS ───────────────────────────────────────────────────
+function switchTab(t){
+  document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('on')});
+  document.querySelectorAll('.pane').forEach(function(x){x.classList.remove('on')});
+  document.getElementById('tab-'+t).classList.add('on');
+  document.getElementById('pane-'+t).classList.add('on');
+}
+
+// ── LICHESS ────────────────────────────────────────────────
 async function searchLich(){
   var u=document.getElementById('lichUser').value.trim();if(!u){toast('Digite um nome de usuário',true);return}
   var el=document.getElementById('searchRes');el.innerHTML='<div class="ld da">Buscando no Lichess</div>';switchTab('lich');
-  try{var r=await fetch('https://lichess.org/api/games/user/'+encodeURIComponent(u)+'?max=12&opening=true&clocks=false&evals=false',{headers:{'Accept':'application/x-chess-pgn'}});
+  try{
+    var r=await fetch('https://lichess.org/api/games/user/'+encodeURIComponent(u)+'?max=12&opening=true&clocks=false&evals=false',{headers:{'Accept':'application/x-chess-pgn'}});
     if(!r.ok){el.innerHTML='<div class="msg err">Usuário não encontrado ('+r.status+')</div>';return}
     var txt=await r.text(),gs=splitPGN(txt);results=gs;
     if(!gs.length){el.innerHTML='<div class="msg err">Nenhuma partida encontrada.</div>';return}
-    renderResults(gs,u)
+    renderResults(gs,u);
   }catch(ex){el.innerHTML='<div class="msg err">Erro: '+ex.message+'</div>'}
 }
 async function importURL(){
   var url=document.getElementById('lichURL').value.trim();if(!url){toast('Digite uma URL',true);return}
   var el=document.getElementById('searchRes');el.innerHTML='<div class="ld da">Importando</div>';switchTab('lich');
-  try{var m=url.match(/lichess\.org\/([a-zA-Z0-9]{8,12})/);
+  try{
+    var m=url.match(/lichess\.org\/([a-zA-Z0-9]{8,12})/);
     var fu=m?'https://lichess.org/game/export/'+m[1]+'?clocks=false&evals=false&opening=true':url;
     var r=await fetch(fu,{headers:{'Accept':'application/x-chess-pgn'}});
     if(!r.ok){el.innerHTML='<div class="msg err">Erro '+r.status+'</div>';return}
     var pgn=await r.text(),h=parseHeaders(pgn);
-    el.innerHTML='<div class="msg ok">✓ Importada! Clique em 💾 Salvar para guardar na biblioteca.</div>';
-    loadGame(pgn,{},{w:h.White,b:h.Black,r:h.Result,e:h.Event,d:h.Date})
+    el.innerHTML='<div class="msg ok">✓ Importada! Clique em 💾 Salvar para guardar.</div>';
+    loadGame(pgn,{},{w:h.White,b:h.Black,r:h.Result,e:h.Event,d:h.Date});
   }catch(ex){el.innerHTML='<div class="msg err">Erro: '+ex.message+'</div>'}
 }
-function loadPGNDirect(){var pgn=document.getElementById('pgnPaste').value.trim();if(!pgn){toast('Cole um PGN válido',true);return}var h=parseHeaders(pgn);var ok=loadGame(pgn,{},{w:h.White||'?',b:h.Black||'?',r:h.Result||'*',e:h.Event,d:h.Date});if(ok){document.getElementById('pgnPaste').value='';toast('✓ PGN carregado! Use 💾 para salvar.')}}
-function loadResult(i){var pgn=results[i],h=parseHeaders(pgn);loadGame(pgn,{},{w:h.White||'?',b:h.Black||'?',r:h.Result||'*',e:h.Event,d:h.Date});toast('✓ Carregada! Use 💾 para salvar na biblioteca.')}
+function loadPGNDirect(){
+  var pgn=document.getElementById('pgnPaste').value.trim();if(!pgn){toast('Cole um PGN válido',true);return}
+  var h=parseHeaders(pgn);
+  var ok=loadGame(pgn,{},{w:h.White||'?',b:h.Black||'?',r:h.Result||'*',e:h.Event,d:h.Date});
+  if(ok){document.getElementById('pgnPaste').value='';toast('✓ PGN carregado!')}
+}
+function loadResult(i){var pgn=results[i],h=parseHeaders(pgn);loadGame(pgn,{},{w:h.White||'?',b:h.Black||'?',r:h.Result||'*',e:h.Event,d:h.Date});toast('✓ Carregada!')}
 function splitPGN(txt){return txt.split(/(?=\[Event\s)/g).filter(function(s){return s.trim()&&s.indexOf('1.')>=0})}
 function parseHeaders(pgn){var h={},m,re=/\[(\w+)\s+"([^"]*)"\]/g;while((m=re.exec(pgn))!==null)h[m[1]]=m[2];return h}
-function renderResults(gs,u){var h='<div class="shd">'+gs.length+' partidas — '+u+'</div>';gs.forEach(function(pgn,i){var h2=parseHeaders(pgn);h+='<div class="gc" onclick="loadResult('+i+')"><div class="gt" style="font-size:13px">'+(h2.White||'?')+' vs '+(h2.Black||'?')+'</div><div class="gs">'+[h2.Date,h2.Opening].filter(Boolean).join(' · ')+'</div><span class="bdg">'+(h2.Result||'*')+'</span></div>'});document.getElementById('searchRes').innerHTML=h}
+function renderResults(gs,u){
+  var h='<div class="shd" style="margin-top:12px">'+gs.length+' partidas — '+u+'</div>';
+  gs.forEach(function(pgn,i){var h2=parseHeaders(pgn);h+='<div class="gc" onclick="loadResult('+i+')">'+'<div class="gt" style="font-size:12px">'+(h2.White||'?')+' vs '+(h2.Black||'?')+'</div><div class="gs">'+[h2.Date,h2.Opening].filter(Boolean).join(' · ')+'</div><span class="bdg">'+(h2.Result||'*')+'</span></div>'});
+  document.getElementById('searchRes').innerHTML=h;
+}
 
-// ── TOAST ────────────────────────────────────────────────────
+// ── TOAST ──────────────────────────────────────────────────
 var tTimer=null;
-function toast(msg,err){var el=document.getElementById('toast');el.textContent=msg;el.className='toast on'+(err?' err':'');if(tTimer)clearTimeout(tTimer);tTimer=setTimeout(function(){el.classList.remove('on')},3500)}
+function toast(msg,err){
+  var el=document.getElementById('toast');el.textContent=msg;el.className='toast on'+(err?' err':'');
+  if(tTimer)clearTimeout(tTimer);tTimer=setTimeout(function(){el.classList.remove('on')},err?5000:3000);
+}
 
-// ── TECLADO ──────────────────────────────────────────────────
+// ── TECLADO ────────────────────────────────────────────────
 document.addEventListener('keydown',function(e){
   if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;
   if(document.getElementById('modalBg').classList.contains('on')){if(e.key==='Escape')closeModal();return}
-  if(e.key==='ArrowLeft'){e.preventDefault();prev()} if(e.key==='ArrowRight'){e.preventDefault();next()}
-  if(e.key==='ArrowUp'){e.preventDefault();goStart()} if(e.key==='ArrowDown'){e.preventDefault();goEnd()}
-  if(e.key===' '){e.preventDefault();togglePlay()} if(e.key.toLowerCase()==='f'){e.preventDefault();flip()}
+  if(e.key==='ArrowLeft'){e.preventDefault();prev()}
+  if(e.key==='ArrowRight'){e.preventDefault();next()}
+  if(e.key==='ArrowUp'){e.preventDefault();goStart()}
+  if(e.key==='ArrowDown'){e.preventDefault();goEnd()}
+  if(e.key===' '){e.preventDefault();togglePlay()}
+  if(e.key.toLowerCase()==='f'){e.preventDefault();flip()}
   if(e.key.toLowerCase()==='s'){e.preventDefault();openSaveModal()}
 });
 
-// ── BOOT ─────────────────────────────────────────────────────
+// ── INICIALIZAÇÃO ──────────────────────────────────────────
 var bootTries=0;
 function waitChess(){
   if(typeof Chess!=='undefined'){
-    game=new Chess();
-    renderLib();renderBoard();loadUserLibrary();
-    document.getElementById('boot').style.display='none';
+    try{
+      game=new Chess();
+      // Valida PGN loading
+      var test=new Chess();
+      var ok=test.load_pgn('[Event "T"]\n[White "A"]\n[Black "B"]\n[Result "1-0"]\n\n1. e4 e5 1-0');
+      console.log('chess.js carregado. PGN test:',ok);
+      renderLib();renderBoard();loadUserLib();
+      document.getElementById('boot').style.display='none';
+    }catch(err){
+      document.getElementById('bootmsg').textContent='Erro: '+err.message;
+      console.error(err);
+    }
     return;
   }
-  if(++bootTries>200){document.getElementById('bootmsg').textContent='Erro ao carregar chess.js. Verifique sua conexão.';return}
+  if(++bootTries>200){
+    document.getElementById('bootmsg').textContent='Erro: chess.js não carregou. Verifique sua conexão.';
+    return;
+  }
   setTimeout(waitChess,50);
 }
 waitChess();
